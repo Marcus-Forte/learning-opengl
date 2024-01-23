@@ -10,6 +10,7 @@
 #include <iostream>
 #include <thread>
 
+#include "entities/Line.hpp"
 #include "inputProcessor.h"
 #include "layouts/lineAttribute.hpp"
 #include "layouts/pointAttribute.hpp"
@@ -38,6 +39,11 @@ int main(int argc, char** argv) {
 
   glfwMakeContextCurrent(window);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+  glfwSetKeyCallback(window, InputProcessor::keyboardCallback);
+  glfwSetCursorPosCallback(window, InputProcessor::mouseCallback);
+  glfwSetMouseButtonCallback(window, InputProcessor::mouseButtonCallback);
+  glfwSetFramebufferSizeCallback(window,
+                                 [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); });
 
   GLenum err = glewInit();
   if (err != GLEW_OK) {
@@ -60,11 +66,11 @@ int main(int argc, char** argv) {
   VertexObject buffer2;
   buffer2.setData(glDataArray2.data(), glDataArray2.size(), sizeof(GLPointData));
   buffer2.setLayout<GLPointData>(2,
-                                {
-                                    3,
-                                    3,
-                                },
-                                {GL_FLOAT, GL_FLOAT});
+                                 {
+                                     3,
+                                     3,
+                                 },
+                                 {GL_FLOAT, GL_FLOAT});
 
   Camera camera;
 
@@ -75,44 +81,56 @@ int main(int argc, char** argv) {
 
   ShaderProgram program(vertexShader, fragmentShader);
 
-  // Line object
-  // GLLineData line_data { 0.0, 0.0, 0.0, 2.0, 2.0, 2.0};
-  // VertexObject line_buffer;
-  // line_buffer.setLayout<GLLineData>(1, {3}, {GL_FLOAT});
-  // auto GLDataLineBytes = sizeof(GLLineData) * 1;
-  // line_buffer.setData(&line_data.start_pos[0], GLDataLineBytes);
-
   shaderLoader line_vertex_shader("../shaders/line_vertex.glsl", shaderLoader::ShaderType::VERTEX);
   auto lineVertexShader = line_vertex_shader.compile();
 
   ShaderProgram line_program(lineVertexShader, fragmentShader);
-  line_program.setDataFetchCb([&camera]() { return glm::value_ptr(camera.getMVP()); });
 
-  //
+  float line_color[3] = {0.0, 1.0, 0.0};
 
-  program.setDataFetchCb([&camera]() { return glm::value_ptr(camera.getMVP()); });
+  line_program.bindUniformData(
+      "transform", [&camera]() { return glm::value_ptr(camera.getMVP()); }, ShaderProgram::GLMATRIX4);
+  line_program.bindUniformData(
+      "color", [&line_color]() { return line_color; }, ShaderProgram::GLVEC3);
+  program.bindUniformData(
+      "transform", [&camera]() { return glm::value_ptr(camera.getMVP()); }, ShaderProgram::GLMATRIX4);
 
   InputProcessor::setCamera(&camera);
 
-  glfwSetKeyCallback(window, InputProcessor::keyboardCallback);
-  glfwSetCursorPosCallback(window, InputProcessor::mouseCallback);
-  glfwSetMouseButtonCallback(window, InputProcessor::mouseButtonCallback);
-
   Renderer renderer(window, camera);
 
-  // Entity line(line_buffer, line_program);
-  // line.setGlDrawType(GL_POINTS);
-  Entity pointcloud(buffer, program);
-  Entity pointcloud2(buffer2, program);
+  entity::Line line_entity{0.0, 0.0, 0.0, 2.0, 2.0, 2.0};
+  line_entity.setShaderProgram(&line_program);
+  // Entity pointcloud(buffer, program);
+  // Entity pointcloud2(buffer2, program);
+  // pointcloud2.setShaderProgram(&program);
 
-  renderer.addEntity(pointcloud, "cloud");
-  renderer.addEntity(pointcloud2, "cloud2");
-  // renderer.addEntity(line, "line");
+  // renderer.addEntity(pointcloud, "cloud");
+  // renderer.addEntity(pointcloud2, "cloud2");
+
+  renderer.addEntity(line_entity, "line0");
+  // renderer.addEntity(line_entity2, "line1");
+
+  // glLineWidth(8.0);
+
+  // std::thread t([&renderer, &line_program] {
+  //   float x = 1.0;
+  //   entity::Line line{0.0, 0.0, 0.0, 2.0, 2.0, 2.0};
+  //   while (true) {
+  //     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  //     std::cout << "Add line\n";
+
+  //     // line_entity.setShaderProgram(&line_program);
+  //     // renderer.addEntity(line_entity, "line" + std::to_string(x));
+  //     // x++;
+  //       }
+  // });
 
   while (!glfwWindowShouldClose(window)) {
     // input
     // -----
     processInput(window);
+
     renderer.render();
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(100));
