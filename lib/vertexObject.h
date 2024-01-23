@@ -13,8 +13,8 @@ class VertexObject {
   }
 
   virtual ~VertexObject() {
-    glDeleteVertexArrays(1, &vao_id_);
-    glDeleteBuffers(1, &vbo_id_);
+    // glDeleteVertexArrays(1, &vao_id_);
+    // glDeleteBuffers(1, &vbo_id_);
   }
 
   void setData(void* data, size_t num_vertices, size_t vertex_size) {

@@ -99,31 +99,45 @@ int main(int argc, char** argv) {
 
   Renderer renderer(window, camera);
 
-  entity::Line line_entity{0.0, 0.0, 0.0, 2.0, 2.0, 2.0};
+  // {
+  entity::Line line_entity{0.0, 0.0, 0.0, 1.0, 0.0, 0.0};
   line_entity.setShaderProgram(&line_program);
-  // Entity pointcloud(buffer, program);
-  // Entity pointcloud2(buffer2, program);
+  renderer.addEntity(line_entity, "line0");
+
+  // entity::Line line2{0.0, .1, .1, 1.0, 0.0, 0.1};
+  // line2.setShaderProgram(&line_program);
+  // renderer.addEntity(line2, "line2");
+  // // }
+  Entity pointcloud(buffer, program);
+  Entity pointcloud2(buffer2, program);
   // pointcloud2.setShaderProgram(&program);
 
-  // renderer.addEntity(pointcloud, "cloud");
-  // renderer.addEntity(pointcloud2, "cloud2");
+  renderer.addEntity(pointcloud, "cloud");
+  renderer.addEntity(pointcloud2, "cloud2");
 
-  renderer.addEntity(line_entity, "line0");
   // renderer.addEntity(line_entity2, "line1");
 
-  // glLineWidth(8.0);
+  glLineWidth(8.0);
 
-  // std::thread t([&renderer, &line_program] {
+  // std::thread add_lines([&renderer, &line_program] {
   //   float x = 1.0;
-  //   entity::Line line{0.0, 0.0, 0.0, 2.0, 2.0, 2.0};
+  //   std::vector<entity::Line> lines;
+  //   entity::Line line{0.0, .1, .1, 1.0, 0.0, 0.1};
+  //   line.setShaderProgram(&line_program);
+  //   lines.push_back(line);
+
+    
+  //   renderer.addEntity(line, "line" + std::to_string(x));
+
   //   while (true) {
   //     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  //     std::cout << "Add line\n";
+  //     std::cout << "loop\n";
+  //     // entity::Line line{x, x, x, x+1, x+1, x+1};
+  //     // line.setShaderProgram(&line_program);
+  //     renderer.render();
 
-  //     // line_entity.setShaderProgram(&line_program);
-  //     // renderer.addEntity(line_entity, "line" + std::to_string(x));
-  //     // x++;
-  //       }
+  //     x++;
+  //   }
   // });
 
   while (!glfwWindowShouldClose(window)) {

@@ -26,7 +26,7 @@ class Entity {
   }
 
  protected:
-  Entity() {}
+  Entity() = default;
   VertexObject vertex_object_;
   const ShaderProgram* shader_program_ = nullptr;
   unsigned int gl_draw_type_ = GL_POINTS;
