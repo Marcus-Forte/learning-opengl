@@ -1,8 +1,12 @@
 #version 330 core
 
-out vec4 FragColor;
+out vec4 colorOut;
+in vec3 vColorOut;
+
+uniform mat4 transform;
 
 void main()
 {
-    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    colorOut = vec4(vColorOut.x, vColorOut.y, vColorOut.z, 1.0f);
+
 } 

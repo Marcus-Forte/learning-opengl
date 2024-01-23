@@ -1,9 +1,20 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <camera.h>
 
+#include <functional>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <iostream>
 
+#include "inputProcessor.h"
 #include "shaderLoader.hpp"
+#include "vertexBuffer.h"
+
+Camera camera;
+float g_pt_size = 5;
 
 void processInput(GLFWwindow* window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -16,7 +27,7 @@ int main(int argc, char** argv) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(1024, 800, "LearnOpenGL", NULL, NULL);
   if (window == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -24,6 +35,7 @@ int main(int argc, char** argv) {
   }
 
   glfwMakeContextCurrent(window);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
   GLenum err = glewInit();
   if (err != GLEW_OK) {
@@ -33,17 +45,30 @@ int main(int argc, char** argv) {
   }
 
   // GL Data
-  float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+  // float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f,
+  // 0.5f, 1.0f}; float colors[] = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+  // 0.0, 1.0};
 
+  // float vertices_colors[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,
+  //                            0.0f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f,
+  //                            0.0f,  1.0f,  0.0f, 0.0f, 0.0f,  1.0f};
+
+  float vertices_colors[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,
+                             0.0f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f,
+                             0.0f,  1.0f,  0.0f, 0.0f, 0.0f,  1.0f};
   unsigned int VAO;
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
-  unsigned int VBO;
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
+
+  VertexBufferLayout layout;
+  layout.addAttribute(VertexBufferLayout::float_, 3);  // positions
+  layout.addAttribute(VertexBufferLayout::float_, 3);  // colors
+
+  VertexBuffer buffer;
+
+  buffer.setData(vertices_colors, sizeof(vertices_colors));
+  buffer.setLayout(layout);
+  buffer.bind();
 
   shaderLoader vertex_shader("../shaders/vertex.glsl",
                              shaderLoader::ShaderType::VERTEX);
@@ -71,8 +96,14 @@ int main(int argc, char** argv) {
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
-  //
-  std::cout << "Rendering\n";
+  unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+
+  InputProcessor::setCamera(&camera);
+
+  glfwSetKeyCallback(window, InputProcessor::keyboardCallback);
+  glfwSetCursorPosCallback(window, InputProcessor::mouseCallback);
+  glfwSetMouseButtonCallback(window, InputProcessor::mouseButtonCallback);
+
   while (!glfwWindowShouldClose(window)) {
     // input
     // -----
@@ -88,7 +119,10 @@ int main(int argc, char** argv) {
     glBindVertexArray(VAO);  // seeing as we only have a single VAO there's no
                              // need to bind it every time, but we'll do so to
                              // keep things a bit more organized
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE,
+                       glm::value_ptr(camera.getMVP()));
+    glDrawArrays(GL_POINTS, 0, 3);
+    glPointSize(g_pt_size);
     // glBindVertexArray(0); // no need to unbind it every time
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
@@ -99,7 +133,7 @@ int main(int argc, char** argv) {
   }
 
   glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
+  // glDeleteBuffers(1, &VBO);
   glDeleteProgram(shaderProgram);
 
   glfwTerminate();
