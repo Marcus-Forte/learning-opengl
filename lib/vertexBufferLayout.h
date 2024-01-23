@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "vertexBuffer.h"
+// #include "vertexObject.h"
 
 class VertexBufferLayout {
  public:
@@ -24,17 +24,35 @@ class VertexBufferLayout {
     }
   }
 
-  const std::vector<unsigned int>& getAttributeType() const {
-    return attributes_types_;
-  }
-  const std::vector<unsigned int>& getAttributeNumElements() const {
-    return attribute_num_elements_;
-  }
-  const std::vector<unsigned int>& getAttributeTypeSize() const {
-    return attribute_type_size_;
-  }
+  const std::vector<unsigned int>& getAttributeType() const { return attributes_types_; }
+  const std::vector<unsigned int>& getAttributeNumElements() const { return attribute_num_elements_; }
+  const std::vector<unsigned int>& getAttributeTypeSize() const { return attribute_type_size_; }
 
   unsigned int getNumAttributes() const { return attributes_types_.size(); }
+
+  static unsigned int getsizeFromType(gl_type type) {
+    switch (type) {
+      case gl_type::float_:
+        return sizeof(float);
+
+      case gl_type::int_:
+        return sizeof(int);
+        break;
+    }
+  }
+
+  static unsigned int getsizeFromType(unsigned int GL_TYPE_) {
+    switch (GL_TYPE_) {
+      case GL_FLOAT:
+        return sizeof(float);
+
+      case GL_INT:
+        return sizeof(int);
+        break;
+      default:
+        throw std::runtime_error("GL TYPE Not supported");
+    }
+  }
 
  private:
   std::vector<unsigned int> attributes_types_;

@@ -14,6 +14,7 @@ class InputProcessor {
                                   int mods);
 
  private:
+ InputProcessor();
   static Camera* camera_ref_;
   static bool mouse_pressed_;
 };

@@ -9,4 +9,4 @@ add_executable(main
     src/main.cpp
     lib/inputProcessor.cpp)
 target_link_libraries(main OpenGL::GL glfw ${GLEW_LIBRARIES})
-target_include_directories(main PUBLIC lib)
+target_include_directories(main PUBLIC lib ext)

@@ -8,17 +8,19 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
+#include <thread>
 
 #include "inputProcessor.h"
+#include "layouts/lineAttribute.hpp"
+#include "layouts/pointAttribute.hpp"
+#include "pointsLoader.hpp"
+#include "renderer.hpp"
 #include "shaderLoader.hpp"
-#include "vertexBuffer.h"
-
-Camera camera;
-float g_pt_size = 5;
+#include "shaderProgram.hpp"
+#include "vertexObject.h"
 
 void processInput(GLFWwindow* window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 }
 
 int main(int argc, char** argv) {
@@ -44,59 +46,51 @@ int main(int argc, char** argv) {
     exit(1);
   }
 
-  // GL Data
-  // float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f,
-  // 0.5f, 1.0f}; float colors[] = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-  // 0.0, 1.0};
+  auto glDataArray = loadFile("/home/marcus/workspace/clouds/all_registered.txt");
+  VertexObject buffer;
+  buffer.setData(glDataArray.data(), glDataArray.size(), sizeof(GLPointData));
+  buffer.setLayout<GLPointData>(2,
+                                {
+                                    3,
+                                    3,
+                                },
+                                {GL_FLOAT, GL_FLOAT});
 
-  // float vertices_colors[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,
-  //                            0.0f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f,
-  //                            0.0f,  1.0f,  0.0f, 0.0f, 0.0f,  1.0f};
+  auto glDataArray2 = loadFile("/home/marcus/workspace/clouds/myscan.xyz");
+  VertexObject buffer2;
+  buffer2.setData(glDataArray2.data(), glDataArray2.size(), sizeof(GLPointData));
+  buffer2.setLayout<GLPointData>(2,
+                                {
+                                    3,
+                                    3,
+                                },
+                                {GL_FLOAT, GL_FLOAT});
 
-  float vertices_colors[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,
-                             0.0f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f,
-                             0.0f,  1.0f,  0.0f, 0.0f, 0.0f,  1.0f};
-  unsigned int VAO;
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
+  Camera camera;
 
-  VertexBufferLayout layout;
-  layout.addAttribute(VertexBufferLayout::float_, 3);  // positions
-  layout.addAttribute(VertexBufferLayout::float_, 3);  // colors
-
-  VertexBuffer buffer;
-
-  buffer.setData(vertices_colors, sizeof(vertices_colors));
-  buffer.setLayout(layout);
-  buffer.bind();
-
-  shaderLoader vertex_shader("../shaders/vertex.glsl",
-                             shaderLoader::ShaderType::VERTEX);
+  shaderLoader vertex_shader("../shaders/vertex.glsl", shaderLoader::ShaderType::VERTEX);
   auto vertexShader = vertex_shader.compile();
-  shaderLoader fragment_shader("../shaders/fragment.glsl",
-                               shaderLoader::ShaderType::FRAGMENT);
+  shaderLoader fragment_shader("../shaders/fragment.glsl", shaderLoader::ShaderType::FRAGMENT);
   auto fragmentShader = fragment_shader.compile();
 
-  unsigned int shaderProgram;
-  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
+  ShaderProgram program(vertexShader, fragmentShader);
 
-  int success;
-  char infoLog[512];
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::PROGRAM_FAILED\n"
-              << infoLog << std::endl;
-  }
-  glUseProgram(shaderProgram);
+  // Line object
+  // GLLineData line_data { 0.0, 0.0, 0.0, 2.0, 2.0, 2.0};
+  // VertexObject line_buffer;
+  // line_buffer.setLayout<GLLineData>(1, {3}, {GL_FLOAT});
+  // auto GLDataLineBytes = sizeof(GLLineData) * 1;
+  // line_buffer.setData(&line_data.start_pos[0], GLDataLineBytes);
 
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  shaderLoader line_vertex_shader("../shaders/line_vertex.glsl", shaderLoader::ShaderType::VERTEX);
+  auto lineVertexShader = line_vertex_shader.compile();
 
-  unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+  ShaderProgram line_program(lineVertexShader, fragmentShader);
+  line_program.setDataFetchCb([&camera]() { return glm::value_ptr(camera.getMVP()); });
+
+  //
+
+  program.setDataFetchCb([&camera]() { return glm::value_ptr(camera.getMVP()); });
 
   InputProcessor::setCamera(&camera);
 
@@ -104,37 +98,25 @@ int main(int argc, char** argv) {
   glfwSetCursorPosCallback(window, InputProcessor::mouseCallback);
   glfwSetMouseButtonCallback(window, InputProcessor::mouseButtonCallback);
 
+  Renderer renderer(window, camera);
+
+  // Entity line(line_buffer, line_program);
+  // line.setGlDrawType(GL_POINTS);
+  Entity pointcloud(buffer, program);
+  Entity pointcloud2(buffer2, program);
+
+  renderer.addEntity(pointcloud, "cloud");
+  renderer.addEntity(pointcloud2, "cloud2");
+  // renderer.addEntity(line, "line");
+
   while (!glfwWindowShouldClose(window)) {
     // input
     // -----
     processInput(window);
+    renderer.render();
 
-    // render
-    // ------
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // draw our first triangle
-    glUseProgram(shaderProgram);
-    glBindVertexArray(VAO);  // seeing as we only have a single VAO there's no
-                             // need to bind it every time, but we'll do so to
-                             // keep things a bit more organized
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE,
-                       glm::value_ptr(camera.getMVP()));
-    glDrawArrays(GL_POINTS, 0, 3);
-    glPointSize(g_pt_size);
-    // glBindVertexArray(0); // no need to unbind it every time
-
-    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
-    // etc.)
-    // -------------------------------------------------------------------------------
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+    // std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
-
-  glDeleteVertexArrays(1, &VAO);
-  // glDeleteBuffers(1, &VBO);
-  glDeleteProgram(shaderProgram);
 
   glfwTerminate();
   return 0;

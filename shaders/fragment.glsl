@@ -3,10 +3,7 @@
 out vec4 colorOut;
 in vec3 vColorOut;
 
-uniform mat4 transform;
-
 void main()
 {
     colorOut = vec4(vColorOut.x, vColorOut.y, vColorOut.z, 1.0f);
-
 } 
