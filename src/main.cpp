@@ -26,8 +26,8 @@ void processInput(GLFWwindow* window) {
 
 int main(int argc, char** argv) {
   glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   GLFWwindow* window = glfwCreateWindow(1024, 800, "LearnOpenGL", NULL, NULL);
@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  // exit(0);
   glfwMakeContextCurrent(window);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
   glfwSetKeyCallback(window, InputProcessor::keyboardCallback);
@@ -52,7 +53,7 @@ int main(int argc, char** argv) {
     exit(1);
   }
 
-  auto glDataArray = loadFile("/home/marcus/workspace/clouds/all_registered.txt");
+  auto glDataArray = loadFile("/Users/marcusforte/workspace/coding/learning-opengl/clouds/bunny.pcd");
   VertexObject buffer;
   buffer.setData(glDataArray.data(), glDataArray.size(), sizeof(GLPointData));
   buffer.setLayout<GLPointData>(2,
@@ -62,15 +63,15 @@ int main(int argc, char** argv) {
                                 },
                                 {GL_FLOAT, GL_FLOAT});
 
-  auto glDataArray2 = loadFile("/home/marcus/workspace/clouds/myscan.xyz");
-  VertexObject buffer2;
-  buffer2.setData(glDataArray2.data(), glDataArray2.size(), sizeof(GLPointData));
-  buffer2.setLayout<GLPointData>(2,
-                                 {
-                                     3,
-                                     3,
-                                 },
-                                 {GL_FLOAT, GL_FLOAT});
+  // auto glDataArray2 = loadFile("/home/marcus/workspace/clouds/myscan.xyz");
+  // VertexObject buffer2;
+  // buffer2.setData(glDataArray2.data(), glDataArray2.size(), sizeof(GLPointData));
+  // buffer2.setLayout<GLPointData>(2,
+  //                                {
+  //                                    3,
+  //                                    3,
+  //                                },
+  //                                {GL_FLOAT, GL_FLOAT});
 
   Camera camera;
 
@@ -101,19 +102,25 @@ int main(int argc, char** argv) {
 
   // {
   entity::Line line_entity{0.0, 0.0, 0.0, 1.0, 0.0, 0.0};
+  entity::Line line_entity2{0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
+  entity::Line line_entity3{0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
   line_entity.setShaderProgram(&line_program);
+  line_entity2.setShaderProgram(&line_program);
+  line_entity3.setShaderProgram(&line_program);
   renderer.addEntity(line_entity, "line0");
+  renderer.addEntity(line_entity2, "line1");
+  renderer.addEntity(line_entity3, "line2");
 
   // entity::Line line2{0.0, .1, .1, 1.0, 0.0, 0.1};
   // line2.setShaderProgram(&line_program);
   // renderer.addEntity(line2, "line2");
   // // }
   Entity pointcloud(buffer, program);
-  Entity pointcloud2(buffer2, program);
+  // Entity pointcloud2(buffer2, program);
   // pointcloud2.setShaderProgram(&program);
 
   renderer.addEntity(pointcloud, "cloud");
-  renderer.addEntity(pointcloud2, "cloud2");
+  // renderer.addEntity(pointcloud2, "cloud2");
 
   // renderer.addEntity(line_entity2, "line1");
 

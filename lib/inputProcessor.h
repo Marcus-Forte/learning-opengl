@@ -15,4 +15,5 @@ class InputProcessor {
   InputProcessor();
   static Camera* camera_ref_;
   static bool mouse_pressed_;
+  static bool shift_pressed_;
 };

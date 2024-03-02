@@ -8,6 +8,7 @@
 
 Camera* InputProcessor::camera_ref_ = nullptr;
 bool InputProcessor::mouse_pressed_ = false;
+bool InputProcessor::shift_pressed_ = false;
 
 void InputProcessor::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
   if (!camera_ref_) throw std::runtime_error("Camera object not set by inputProcessor.\n");
@@ -15,7 +16,15 @@ void InputProcessor::keyboardCallback(GLFWwindow* window, int key, int scancode,
   float speed = 1.0;
   float factor = 0.1;
 
-  if (mods == GLFW_MOD_SHIFT) factor = 0.5;
+  if (mods == GLFW_MOD_SHIFT) {
+    factor = 0.5;
+    shift_pressed_ = true ;
+    // std::cout << "SHIFT OK\n";
+    } else {
+    shift_pressed_ = false ;
+    // std::cout << "SHIFT UNPRESSED \n";
+    }
+
 
   float delta = speed * factor;
 
@@ -73,12 +82,12 @@ void InputProcessor::mouseCallback(GLFWwindow* window, double xpos, double ypos)
   if (delta[1] < -max) delta[1] = -max;
 
   // TODO smooth
-  camera_ref_->rotateLocalY(delta[1] * 0.005f);
-  camera_ref_->rotateLocalZ(delta[0] * 0.005f);
-  // camera_ref_->rotate(0.1, glm::vec3(1.0, 0.0,0.0));
-
-  // std::cout << "local x: " << glm::to_string(camera_ref_->getLocalX()) << std::endl;
-  // std::cout << "transform: " << glm::to_string(camera_ref_->getMVP()) << std::endl;
+  if(!shift_pressed_) {
+    camera_ref_->rotateLocalY(delta[1] * 0.005f);
+    camera_ref_->rotateLocalZ(delta[0] * 0.005f);
+  } else {
+    camera_ref_->rotateLocalX(delta[0] * 0.005f);
+  }
 }
 
 void InputProcessor::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {

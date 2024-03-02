@@ -9,7 +9,7 @@
 class Camera {
  public:
   Camera() {
-    position_ = glm::vec3(-2.0f, 0.0f, 1.0f);
+    position_ = glm::vec3(-2.0f, 1.0f, 1.0f);
     cameraX_ = glm::vec3(1.0f, 0.0f, 0.0f);
     cameraZ_ = glm::vec3(0.0f, 0.0f, 1.0f);
     perspective_ = glm::perspective(45.0f, 1.0f, 0.1f, 100.0f);
@@ -38,6 +38,13 @@ class Camera {
     glm::mat4 rotation(1.0f);
     rotation = glm::rotate(rotation, delta, cameraZ_);
     applyTransform3(cameraX_, rotation);
+  }
+
+  void rotateLocalX(float delta) {
+    glm::mat4 rotation(1.0f);
+    rotation = glm::rotate(rotation, delta, cameraX_);
+    applyTransform3(cameraZ_, rotation);
+    // applyTransform3(cameraY_, rotation);
   }
 
   inline const glm::mat4& getMVP() const {
