@@ -15,3 +15,5 @@ add_executable(main
     lib/inputProcessor.cpp)
 target_link_libraries(main OpenGL::GL glfw GLEW::GLEW)
 target_include_directories(main PUBLIC lib ext)
+
+add_definitions(-DTEST_CLOUD_DIR="${CMAKE_CURRENT_SOURCE_DIR}/clouds")

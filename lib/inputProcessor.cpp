@@ -18,13 +18,12 @@ void InputProcessor::keyboardCallback(GLFWwindow* window, int key, int scancode,
 
   if (mods == GLFW_MOD_SHIFT) {
     factor = 0.5;
-    shift_pressed_ = true ;
+    shift_pressed_ = true;
     // std::cout << "SHIFT OK\n";
-    } else {
-    shift_pressed_ = false ;
+  } else {
+    shift_pressed_ = false;
     // std::cout << "SHIFT UNPRESSED \n";
-    }
-
+  }
 
   float delta = speed * factor;
 
@@ -53,9 +52,13 @@ void InputProcessor::keyboardCallback(GLFWwindow* window, int key, int scancode,
     case (GLFW_KEY_D):
       camera_ref_->translateLocalY(delta);
       break;
+
+    case (GLFW_KEY_R):
+      camera_ref_->reset();
+      break;
   }
 
-  std::cout << glm::to_string(camera_ref_->getPosition()) << std::endl;
+  // std::cout << glm::to_string(camera_ref_->getPosition()) << std::endl;
 }
 
 void InputProcessor::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -82,7 +85,7 @@ void InputProcessor::mouseCallback(GLFWwindow* window, double xpos, double ypos)
   if (delta[1] < -max) delta[1] = -max;
 
   // TODO smooth
-  if(!shift_pressed_) {
+  if (!shift_pressed_) {
     camera_ref_->rotateLocalY(delta[1] * 0.005f);
     camera_ref_->rotateLocalZ(delta[0] * 0.005f);
   } else {

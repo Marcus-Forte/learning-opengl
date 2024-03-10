@@ -15,7 +15,7 @@ std::vector<GLPointData> loadFile(const std::string& path) {
   std::vector<GLPointData> retval;
 
   while (std::getline(file, line)) {
-    float x, y, z, r, g, b;
+    float x, y, z, r =0, g =0, b =0;
     std::sscanf(line.c_str(), "%f %f %f %f %f %f", &x, &y, &z, &r, &g, &b);
 
     // r = r / 255.0;

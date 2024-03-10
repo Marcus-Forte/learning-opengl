@@ -8,12 +8,9 @@
 // #include <iostream>
 class Camera {
  public:
-  Camera() {
-    position_ = glm::vec3(-2.0f, 1.0f, 1.0f);
-    cameraX_ = glm::vec3(1.0f, 0.0f, 0.0f);
-    cameraZ_ = glm::vec3(0.0f, 0.0f, 1.0f);
-    perspective_ = glm::perspective(45.0f, 1.0f, 0.1f, 100.0f);
-  }
+  Camera() { init(); }
+
+  void reset() { init(); }
 
   void translateLocalX(float delta) { position_ += cameraX_ * delta; }
 
@@ -62,6 +59,13 @@ class Camera {
     glm::vec4 vec4_rep = glm::vec4(vec3, 1.0f);
     vec4_rep = transform * vec4_rep;
     vec3 = glm::vec3(vec4_rep);
+  }
+
+  void init() {
+    position_ = glm::vec3(-2.0f, 1.0f, 1.0f);
+    cameraX_ = glm::vec3(1.0f, 0.0f, 0.0f);
+    cameraZ_ = glm::vec3(0.0f, 0.0f, 1.0f);
+    perspective_ = glm::perspective(45.0f, 1.0f, 0.1f, 100.0f);
   }
   glm::vec3 position_;
   glm::vec3 cameraX_;  // front

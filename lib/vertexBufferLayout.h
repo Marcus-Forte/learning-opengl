@@ -2,8 +2,6 @@
 
 #include <vector>
 
-// #include "vertexObject.h"
-
 class VertexBufferLayout {
  public:
   enum gl_type { float_ = GL_FLOAT, int_ = GL_INT };

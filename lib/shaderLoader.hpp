@@ -27,7 +27,6 @@ class shaderLoader {
 
     shaderId = glCreateShader((GLenum)type);
     glShaderSource(shaderId, 1, &vertexShaderSource, NULL);
-    // glShaderSource()
   }
 
   /// Compiles and catch errors

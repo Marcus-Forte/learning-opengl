@@ -23,7 +23,7 @@ class ShaderProgram {
     glGetProgramiv(shader_program_id_, GL_LINK_STATUS, &success);
     if (!success) {
       glGetProgramInfoLog(shader_program_id_, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::VERTEX::PROGRAM_FAILED\n" << infoLog << std::endl;
+      std::cerr << "ERROR::SHADER::VERTEX::PROGRAM_FAILED\n" << infoLog << std::endl;
     }
 
     glDeleteShader(vertexShaderId);
@@ -32,13 +32,14 @@ class ShaderProgram {
 
   virtual ~ShaderProgram() { glDeleteProgram(shader_program_id_); }
 
-  void bindUniformData(const std::string& uniform_name, uniforDataSetter data, glUniformSetter uniformSetter) {
+  void bindUniformData(const std::string& uniform_name, uniforDataSetter data, glUniformSetter uniformSetter) const {
     uniform_binders_.push_back({uniform_name, data, uniformSetter});
   }
 
   void use() const {
     glUseProgram(shader_program_id_);
 
+        // Apply custom uniforms
     for (const auto& uniform : uniform_binders_) {
       auto uniform_name = std::get<0>(uniform);
       auto uniform_data_fetcher = std::get<1>(uniform);
@@ -60,7 +61,7 @@ class ShaderProgram {
 
  private:
   unsigned int shader_program_id_;
-  std::vector<uniformFunStruct> uniform_binders_;
+  mutable std::vector<uniformFunStruct> uniform_binders_;
 
   // shader_program_uniforms_;
 };
