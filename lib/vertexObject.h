@@ -26,12 +26,16 @@ class VertexObject {
   /// @param num_vertices number of vertices.
   /// @param vertex_size size of each vertex in bytes.
   void setData(void* data, size_t num_vertices, size_t vertex_size) {
-    bind();
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
     glBufferData(GL_ARRAY_BUFFER, num_vertices * vertex_size, data, GL_STATIC_DRAW);
     num_vertices_ = num_vertices;
-    unbind();
   }
 
+  /// @brief sets the VAO layout.
+  /// @tparam VertexStruct struct containing all properties.
+  /// @param num_attributes number of vertex attributes.
+  /// @param attribute_num_elements vector of number of elements.
+  /// @param attribute_gl_types vector of element primitive
   template <class VertexStruct>
   void setLayout(size_t num_attributes, const std::vector<unsigned int>& attribute_num_elements,
                  const std::vector<unsigned int>& attribute_gl_types) {
@@ -39,6 +43,7 @@ class VertexObject {
       throw std::runtime_error("Mismatching attribute sizes.");
 
     bind();
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
     unsigned int stride = sizeof(VertexStruct);
     for (unsigned int attributeIndex = 0; attributeIndex < num_attributes; ++attributeIndex) {
       const unsigned int numAttributeElements = attribute_num_elements[attributeIndex];
@@ -46,6 +51,7 @@ class VertexObject {
       const unsigned int normalized = GL_FALSE;
       const unsigned int attributeOffset =
           attributeIndex * numAttributeElements * VertexBufferLayout::getsizeFromType(GL_FLOAT);
+
       glVertexAttribPointer(attributeIndex, numAttributeElements, attributeType, normalized, stride,
                             reinterpret_cast<void*>(attributeOffset));
       glEnableVertexAttribArray(attributeIndex);
@@ -55,8 +61,11 @@ class VertexObject {
     unbind();
   }
 
+  /// @brief Sets the VAO layout.
+  /// @param layout
   void setLayout(const VertexBufferLayout& layout) {
     bind();
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
     for (unsigned int attributeIndex = 0; attributeIndex < layout.getNumAttributes(); ++attributeIndex) {
       const unsigned int attributeNumElements = layout.getAttributeNumElements()[attributeIndex];
       const unsigned int attributeType = layout.getAttributeType()[attributeIndex];
@@ -65,22 +74,18 @@ class VertexObject {
       const unsigned int attributeStride = attributeTypeSize * attributeNumElements * layout.getNumAttributes();
       const unsigned int attributeOffset = attributeIndex * attributeTypeSize * attributeNumElements;
 
-      printf("glVertexAttribPointer(%d, %d, %x, %d, %d, %d)\n", attributeIndex, attributeNumElements, attributeType,
-             normalized, attributeStride, attributeOffset);
       glVertexAttribPointer(attributeIndex, attributeNumElements, attributeType, normalized, attributeStride,
                             reinterpret_cast<void*>(attributeOffset));
-
       glEnableVertexAttribArray(attributeIndex);
+      // printf("glVertexAttribPointer(%d, %d, %x, %d, %d, %d)\n", attributeIndex, attributeNumElements, attributeType,
+      //        normalized, attributeStride, attributeOffset);
     }
     unbind();
   }
 
-  void bind() const {
-    glBindVertexArray(vao_id_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
-  }
-
-  void unbind() const { glBindBuffer(0, vbo_id_); }
+  /// @brief bind VAO object.
+  void bind() const { glBindVertexArray(vao_id_); }
+  void unbind() const { glBindVertexArray(0); }
 
   size_t getNumVertices() const { return num_vertices_; }
 

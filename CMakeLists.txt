@@ -12,6 +12,7 @@ find_package(glm REQUIRED) # For algebra
 
 add_executable(main
     src/main.cpp
+    src/grid.cc
     lib/inputProcessor.cpp)
 target_link_libraries(main OpenGL::GL glfw GLEW::GLEW)
 target_include_directories(main PUBLIC lib ext)

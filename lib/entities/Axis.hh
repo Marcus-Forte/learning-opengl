@@ -14,19 +14,23 @@ class Axis : public Entity {
     layout_.addAttribute(VertexBufferLayout::float_, 3);  // pos
     vertex_object_.setLayout(layout_);
     vertex_object_.setData(&axis_data, 4, sizeof(float) * 3);
+
     glGenBuffers(1, &ebo_id_);
     unsigned int sequence[]{
         0, 1, 0, 2, 0, 3  // o->x, o->y, o->z.
     };
+    // Store Element index buffer in VAO.
+    vertex_object_.bind();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), sequence, GL_STATIC_DRAW);
+    vertex_object_.unbind();
 
-    shaderLoader line_vertex_shader("../shaders/line_vertex.glsl", shaderLoader::ShaderType::VERTEX);
+    shaderLoader line_vertex_shader("../shaders/line-vert.glsl", shaderLoader::ShaderType::VERTEX);
     auto lineVertexShader = line_vertex_shader.compile();
     shaderLoader fragment_shader("../shaders/fragment.glsl", shaderLoader::ShaderType::FRAGMENT);
     auto fragmentShader = fragment_shader.compile();
 
-    shader_program_ = new ShaderProgram(lineVertexShader, fragmentShader);
+    shader_program_.reset(new ShaderProgram(lineVertexShader, fragmentShader));
   }
 
   void setAxisWidth(float width) { line_width_ = width; }

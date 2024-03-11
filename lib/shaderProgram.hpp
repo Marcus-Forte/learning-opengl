@@ -2,6 +2,8 @@
 
 #include <GL/glew.h>
 
+#include <functional>
+
 class ShaderProgram {
  public:
   enum glUniformSetter {
@@ -39,7 +41,7 @@ class ShaderProgram {
   void use() const {
     glUseProgram(shader_program_id_);
 
-        // Apply custom uniforms
+    // Apply custom uniforms
     for (const auto& uniform : uniform_binders_) {
       auto uniform_name = std::get<0>(uniform);
       auto uniform_data_fetcher = std::get<1>(uniform);

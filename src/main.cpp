@@ -11,9 +11,9 @@
 #include <iostream>
 #include <thread>
 
-#include "entities/Axis.hh"
-#include "entities/Line.hh"
-#include "entities/Points.hh"
+#include "entities/axis.hh"
+#include "entities/line.hh"
+#include "entities/points.hh"
 #include "inputProcessor.h"
 #include "layouts/lineAttribute.hpp"
 #include "layouts/pointAttribute.hpp"
@@ -26,6 +26,8 @@
 #ifndef TEST_CLOUD_DIR
 #error "Test cloud dir not defined!
 #endif
+
+#include "grid.hh"
 
 void processInput(GLFWwindow* window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
@@ -44,14 +46,17 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  Camera camera;
+  auto& input_processor = InputProcessor::getInstance(&camera);
+
   glfwMakeContextCurrent(window);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-  glfwSetKeyCallback(window, InputProcessor::keyboardCallback);
-  glfwSetCursorPosCallback(window, InputProcessor::mouseCallback);
-  glfwSetMouseButtonCallback(window, InputProcessor::mouseButtonCallback);
+  glfwSetKeyCallback(window, InputProcessor::keyboardCallbackFW);
+  glfwSetCursorPosCallback(window, InputProcessor::mouseCallbackFW);
+  glfwSetMouseButtonCallback(window, InputProcessor::mouseButtonCallbackFW);
   glfwSetFramebufferSizeCallback(window,
                                  [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); });
-
+  // exit(0);
   GLenum err = glewInit();
   if (err != GLEW_OK) {
     // Problem: glewInit failed, something is wrong.
@@ -63,24 +68,27 @@ int main(int argc, char** argv) {
 
   auto bunnyPoints = loadFile(testCloud.string());
 
-  Camera camera;
-
-  InputProcessor::setCamera(&camera);
-
   Renderer renderer(window, camera);
 
-  entity::Axis axis(0, 0, 0);
-  renderer.addEntity(&axis, "axis");
+  std::shared_ptr<entity::Axis> axis(new entity::Axis(0, 0, 0));
+  renderer.addEntity(axis, "axis");
 
-  entity::Points pointcloud(bunnyPoints);
-  pointcloud.setPointSize(5.0);
-  renderer.addEntity(&pointcloud, "cloud");
+  std::shared_ptr<entity::Points> pointcloud(new entity::Points(bunnyPoints));
+  pointcloud->setPointSize(5.0);
+  renderer.addEntity(pointcloud, "cloud");
 
+  // TODO figure out multithread?
+  // std::thread t(grid_animation, &renderer, 100);
+  //  t.join();
+  grid_animation(&renderer, 0);
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
 
     renderer.render();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
   }
+
   glfwTerminate();
   return 0;
 }
