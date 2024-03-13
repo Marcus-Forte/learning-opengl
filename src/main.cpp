@@ -4,12 +4,12 @@
 
 #include <filesystem>
 #include <functional>
+#include <future>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
-#include <thread>
 
 #include "entities/axis.hh"
 #include "entities/line.hh"
@@ -22,6 +22,11 @@
 #include "shaderLoader.hpp"
 #include "shaderProgram.hpp"
 #include "vertexObject.h"
+
+#ifdef USE_GPRC
+#include "grpc_conv.hh"
+#include "grpc_listener.hh"
+#endif
 
 #ifndef TEST_CLOUD_DIR
 #error "Test cloud dir not defined!
@@ -77,17 +82,27 @@ int main(int argc, char** argv) {
   pointcloud->setPointSize(5.0);
   renderer.addEntity(pointcloud, "cloud");
 
-  // TODO figure out multithread?
-  // std::thread t(grid_animation, &renderer, 100);
-  //  t.join();
-  grid_animation(&renderer, 0);
+#ifdef USE_GPRC
+  SharedQueue shared_queue;
+  gRPCListener listener(shared_queue);
+  listener.startAsync();
+#endif
+
+  add_grid(&renderer);
+
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
 
-    renderer.render();
+#ifdef USE_GPRC
+    gRPCtoGL(shared_queue, renderer);
+#endif
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    renderer.render();
   }
+
+  #ifdef USE_GPRC
+  listener.shutDown();
+  #endif
 
   glfwTerminate();
   return 0;

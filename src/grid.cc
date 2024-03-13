@@ -3,7 +3,7 @@
 #include <thread>
 
 #include "entities/line.hh"
-void grid_animation(Renderer* renderer, int milis) {
+void add_grid(Renderer* renderer) {
   static const float x_ = 5.0f;
   static const float y_ = 5.0f;
   float step_ = 0.5;
@@ -19,7 +19,5 @@ void grid_animation(Renderer* renderer, int milis) {
     std::shared_ptr<entity::Line> ly(new entity::Line(y0, x0, 0, y1, x1, 0, 0.0, 1.0, 0.0));
     ly->setWidth(2.0f);
     renderer->addEntity(ly, "ly" + std::to_string(s));
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(milis));
   }
 }

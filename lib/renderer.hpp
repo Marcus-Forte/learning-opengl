@@ -21,6 +21,12 @@ class Renderer {
     if (entities_.find(name) != entities_.end()) entities_.erase(name);
   }
 
+  void listEntities() const {
+    for (const auto &entity : entities_) {
+      std::cout << entity.first << std::endl;
+    }
+  }
+
   GLFWwindow* getWindow() { return window_; }
 
   void render() const {
