@@ -7,7 +7,18 @@
 #endif
 
 #include "vertexBufferLayout.h"
+/*
+Primer on VAOS:
+- glBindVertexArray() records subsequent calls from:
+- glBindBuffer() followed by glVertexAttribPointer() (they are correlated)
+- glEnableVertexAttribArray()
+- glBindBuffer(GL_ELEMENT_ARRAY_BUFFER)
+- VAO are good expression of scene objects.
 
+Good ref: https://www.khronos.org/opengl/wiki/Vertex_Specification
+*/
+
+/// @brief Abstraction of Vertex Array Objects (VAOs).
 class VertexObject {
  public:
   VertexObject() {

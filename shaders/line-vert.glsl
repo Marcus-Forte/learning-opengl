@@ -1,11 +1,14 @@
 #version 330 core
 
+// Line shaders take color as uniforms.
+
 layout (location = 0) in vec3 aPos;
 
 out vec3 vColorOut;
 
 uniform mat4 transform;
 uniform vec3 color;
+
 
 void main()
 {

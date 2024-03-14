@@ -6,12 +6,11 @@
 #include <unordered_set>
 
 #include "GLFW/glfw3.h"
-#include "camera.h"
+#include "camera.hh"
 
 /// @brief Processes keyboard and mouse inputs
 class InputProcessor {
  public:
-  // InputProcessor() = delete;
   /* Singleton forwaders */
   static void keyboardCallbackFW(GLFWwindow* window, int key, int scancode, int action, int mods);
   static void mouseCallbackFW(GLFWwindow* window, double xpos, double ypos);

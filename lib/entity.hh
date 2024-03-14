@@ -1,7 +1,7 @@
 #pragma once
 
-#include "shaderLoader.hpp"
-#include "shaderProgram.hpp"
+#include "shaderLoader.hh"
+#include "shaderProgram.hh"
 #include "vertexObject.h"
 class Entity {
  public:

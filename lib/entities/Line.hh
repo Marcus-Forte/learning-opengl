@@ -2,7 +2,7 @@
 
 #include "entity.hh"
 #include "layouts/lineAttribute.hpp"
-#include "shaderLoader.hpp"
+#include "shaderLoader.hh"
 
 namespace entity {
 class Line : public Entity {

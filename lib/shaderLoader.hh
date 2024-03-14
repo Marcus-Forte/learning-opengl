@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include "GL/glew.h"
 class shaderLoader {
@@ -29,7 +30,8 @@ class shaderLoader {
     glShaderSource(shaderId, 1, &vertexShaderSource, NULL);
   }
 
-  /// Compiles and catch errors
+  /// @brief Compile shader program.
+  /// @return shaderId
   unsigned int compile() const {
     int success;
     char infoLog[512];

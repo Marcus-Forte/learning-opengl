@@ -1,7 +1,7 @@
 #pragma once
 #include "entities/points.hh"
 #include "grpc_listener.hh"
-#include "renderer.hpp"
+#include "renderer.hh"
 /* GRPC conversion utilities. */
 using namespace grpc_listener;
 

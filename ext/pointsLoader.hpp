@@ -1,9 +1,13 @@
 #pragma once
 
 #include <fstream>
-
+#include <string>
 #include "layouts/pointAttribute.hpp"
 
+/// @brief Basic point cloud file loader.
+/// points are separated by white spaces. 
+/// @param path 
+/// @return 
 std::vector<GLPointData> loadFile(const std::string& path) {
   std::fstream file(path);
 

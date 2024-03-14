@@ -1,5 +1,5 @@
 #pragma once
 
-#include "renderer.hpp"
+#include "renderer.hh"
 
 void add_grid(Renderer* rend);
