@@ -54,9 +54,9 @@ class VertexObject {
       glVertexAttribPointer(attributeIndex, numAttributeElements, attributeType, normalized, stride,
                             reinterpret_cast<void*>(attributeOffset));
       glEnableVertexAttribArray(attributeIndex);
-      printf("glVertexAttribPointer(%d, %d, %x, %d, %d, %d)\n", attributeIndex, numAttributeElements, attributeType,
-             normalized, stride, attributeOffset);
-      attributeOffset += numAttributeElements * VertexBufferLayout::getsizeFromType(GL_FLOAT);
+      // printf("glVertexAttribPointer(%d, %d, %x, %d, %d, %d)\n", attributeIndex, numAttributeElements, attributeType,
+      //        normalized, stride, attributeOffset);
+      attributeOffset += numAttributeElements * VertexBufferLayout::getsizeFromType(attributeType);
     }
     unbind();
   }
@@ -68,24 +68,25 @@ class VertexObject {
     unsigned int attributeOffset = 0;
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
     for (unsigned int attributeIndex = 0; attributeIndex < layout.getNumAttributes(); ++attributeIndex) {
-      const unsigned int attributeNumElements = layout.getAttributeNumElements()[attributeIndex];
+      const unsigned int numAttributeElements = layout.getAttributeNumElements()[attributeIndex];
       const unsigned int attributeType = layout.getAttributeType()[attributeIndex];
       const unsigned int normalized = GL_FALSE;
       const unsigned int attributeTypeSize = layout.getAttributeTypeSize()[attributeIndex];
-      const unsigned int attributeStride = attributeTypeSize * attributeNumElements * layout.getNumAttributes();
+      const unsigned int attributeStride = attributeTypeSize * numAttributeElements * layout.getNumAttributes();
 
-      glVertexAttribPointer(attributeIndex, attributeNumElements, attributeType, normalized, attributeStride,
+      glVertexAttribPointer(attributeIndex, numAttributeElements, attributeType, normalized, attributeStride,
                             reinterpret_cast<void*>(attributeOffset));
       glEnableVertexAttribArray(attributeIndex);
       // printf("glVertexAttribPointer(%d, %d, %x, %d, %d, %d)\n", attributeIndex, attributeNumElements, attributeType,
       //        normalized, attributeStride, attributeOffset);
-      attributeOffset += attributeTypeSize * attributeNumElements;
+      attributeOffset += numAttributeElements * attributeTypeSize;
     }
     unbind();
   }
 
   /// @brief bind VAO object.
   void bind() const { glBindVertexArray(vao_id_); }
+  /// @brief unbind VAO object.
   void unbind() const { glBindVertexArray(0); }
 
   size_t getNumVertices() const { return num_vertices_; }

@@ -23,7 +23,7 @@
 #include "shaderProgram.hpp"
 #include "vertexObject.h"
 
-#ifdef USE_GPRC
+#ifdef USE_GRPC
 #include "grpc_conv.hh"
 #include "grpc_listener.hh"
 #endif
@@ -69,40 +69,39 @@ int main(int argc, char** argv) {
     exit(1);
   }
 
-  auto testCloud = std::filesystem::path(TEST_CLOUD_DIR) / "bunny.pcd";
+  auto testCloud = std::filesystem::path(TEST_CLOUD_DIR) / "points.txt";
 
-  auto bunnyPoints = loadFile(testCloud.string());
+  auto loaded_points = loadFile(testCloud.string());
 
   Renderer renderer(window, camera);
 
-  std::shared_ptr<entity::Axis> axis(new entity::Axis(0, 0, 0));
-  renderer.addEntity(axis, "axis");
+  // std::shared_ptr<entity::Points> pointcloud(new entity::Points(loaded_points));
+  // pointcloud->setPointSize(5.0);
+  // renderer.addEntity(pointcloud, "cloud");
 
-  std::shared_ptr<entity::Points> pointcloud(new entity::Points(bunnyPoints));
-  pointcloud->setPointSize(5.0);
-  renderer.addEntity(pointcloud, "cloud");
-
-#ifdef USE_GPRC
+#ifdef USE_GRPC
   grpc_listener::SharedQueue shared_queue;
   grpc_listener::gRPCListener listener(shared_queue);
   listener.startAsync();
 #endif
 
-  add_grid(&renderer);
+  // add_grid(&renderer);
+  std::shared_ptr<entity::Axis> axis(new entity::Axis(0, 0, 0));
+  renderer.addEntity(axis, "axis");
 
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
 
-#ifdef USE_GPRC
+#ifdef USE_GRPC
     processgRPCQueue(shared_queue, renderer);
 #endif
 
     renderer.render();
   }
 
-  #ifdef USE_GPRC
+#ifdef USE_GPRC
   listener.shutDown();
-  #endif
+#endif
 
   glfwTerminate();
   return 0;

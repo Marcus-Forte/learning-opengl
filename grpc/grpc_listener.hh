@@ -2,9 +2,9 @@
 #include <queue>
 #include <thread>
 
-#include "grpc/points.grpc.pb.h"
-#include "grpc/points.pb.h"
 #include "grpcpp/grpcpp.h"
+#include "proto/points.grpc.pb.h"
+#include "proto/points.pb.h"
 
 using PointQueue = std::deque<Point3>;
 using PointCloudQueue = std::deque<PointCloud3>;

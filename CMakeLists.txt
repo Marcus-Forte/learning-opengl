@@ -12,18 +12,16 @@ find_package(GLEW REQUIRED) # openGL <-> GPU function pointers
 find_package(glfw3 REQUIRED) # window system
 find_package(glm REQUIRED) # For algebra
 
-
-
 add_executable(main
-    src/main.cpp
-    src/grid.cc
-    lib/inputProcessor.cpp)
+  src/main.cpp
+  src/grid.cc
+  lib/inputProcessor.cpp)
 target_link_libraries(main OpenGL::GL glfw GLEW::GLEW)
 target_include_directories(main PUBLIC lib ext)
 
 add_definitions(-DTEST_CLOUD_DIR="${CMAKE_CURRENT_SOURCE_DIR}/clouds")
 if(USE_GRPC)
-include(grpc/CMakeLists.txt)
-target_link_libraries(main grpc_listener)
-add_definitions(-DUSE_GPRC=ON)
+  add_subdirectory(grpc)
+  target_link_libraries(main grpc_listener)
+  add_definitions(-DUSE_GRPC=ON)
 endif()
