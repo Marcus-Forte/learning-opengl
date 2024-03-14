@@ -14,7 +14,11 @@ class Renderer {
   Renderer(GLFWwindow* window, const Camera& camera) : window_(window), camera_ref_(camera) {}
 
   void addEntity(std::shared_ptr<const Entity> entity, const std::string& name) {
-    if (entities_.find(name) == entities_.end()) entities_.emplace(name, entity);
+    // Overwrite if existant.
+    if (entities_.find(name) != entities_.end()) {
+      entities_.erase(name);
+    }
+    entities_.emplace(name, entity);
   }
 
   void removeEntity(const std::string& name) {
@@ -22,7 +26,7 @@ class Renderer {
   }
 
   void listEntities() const {
-    for (const auto &entity : entities_) {
+    for (const auto& entity : entities_) {
       std::cout << entity.first << std::endl;
     }
   }

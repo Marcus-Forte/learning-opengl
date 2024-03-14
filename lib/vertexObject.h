@@ -45,18 +45,18 @@ class VertexObject {
     bind();
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
     unsigned int stride = sizeof(VertexStruct);
+    unsigned int attributeOffset = 0;
     for (unsigned int attributeIndex = 0; attributeIndex < num_attributes; ++attributeIndex) {
       const unsigned int numAttributeElements = attribute_num_elements[attributeIndex];
       const unsigned int attributeType = attribute_gl_types[attributeIndex];
       const unsigned int normalized = GL_FALSE;
-      const unsigned int attributeOffset =
-          attributeIndex * numAttributeElements * VertexBufferLayout::getsizeFromType(GL_FLOAT);
 
       glVertexAttribPointer(attributeIndex, numAttributeElements, attributeType, normalized, stride,
                             reinterpret_cast<void*>(attributeOffset));
       glEnableVertexAttribArray(attributeIndex);
       printf("glVertexAttribPointer(%d, %d, %x, %d, %d, %d)\n", attributeIndex, numAttributeElements, attributeType,
              normalized, stride, attributeOffset);
+      attributeOffset += numAttributeElements * VertexBufferLayout::getsizeFromType(GL_FLOAT);
     }
     unbind();
   }
@@ -65,6 +65,7 @@ class VertexObject {
   /// @param layout
   void setLayout(const VertexBufferLayout& layout) {
     bind();
+    unsigned int attributeOffset = 0;
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
     for (unsigned int attributeIndex = 0; attributeIndex < layout.getNumAttributes(); ++attributeIndex) {
       const unsigned int attributeNumElements = layout.getAttributeNumElements()[attributeIndex];
@@ -72,13 +73,13 @@ class VertexObject {
       const unsigned int normalized = GL_FALSE;
       const unsigned int attributeTypeSize = layout.getAttributeTypeSize()[attributeIndex];
       const unsigned int attributeStride = attributeTypeSize * attributeNumElements * layout.getNumAttributes();
-      const unsigned int attributeOffset = attributeIndex * attributeTypeSize * attributeNumElements;
 
       glVertexAttribPointer(attributeIndex, attributeNumElements, attributeType, normalized, attributeStride,
                             reinterpret_cast<void*>(attributeOffset));
       glEnableVertexAttribArray(attributeIndex);
       // printf("glVertexAttribPointer(%d, %d, %x, %d, %d, %d)\n", attributeIndex, attributeNumElements, attributeType,
       //        normalized, attributeStride, attributeOffset);
+      attributeOffset += attributeTypeSize * attributeNumElements;
     }
     unbind();
   }

@@ -83,8 +83,8 @@ int main(int argc, char** argv) {
   renderer.addEntity(pointcloud, "cloud");
 
 #ifdef USE_GPRC
-  SharedQueue shared_queue;
-  gRPCListener listener(shared_queue);
+  grpc_listener::SharedQueue shared_queue;
+  grpc_listener::gRPCListener listener(shared_queue);
   listener.startAsync();
 #endif
 
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
     processInput(window);
 
 #ifdef USE_GPRC
-    gRPCtoGL(shared_queue, renderer);
+    processgRPCQueue(shared_queue, renderer);
 #endif
 
     renderer.render();
