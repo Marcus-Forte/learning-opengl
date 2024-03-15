@@ -3,11 +3,11 @@
 #include "inputProcessor.hh"
 Renderer::Renderer() {
   glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window_ = glfwCreateWindow(1024, 800, "LearnOpenGL", NULL, NULL);
+  window_ = glfwCreateWindow(1024, 800, "Mview", NULL, NULL);
   if (window_ == NULL) {
     std::cerr << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -17,6 +17,7 @@ Renderer::Renderer() {
   auto& input_processor = InputProcessor::getInstance(&camera_);
 
   glfwMakeContextCurrent(window_);
+  glfwSwapInterval( 1 );
   glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
   glfwSetKeyCallback(window_, InputProcessor::keyboardCallbackFW);
   glfwSetCursorPosCallback(window_, InputProcessor::mouseCallbackFW);
