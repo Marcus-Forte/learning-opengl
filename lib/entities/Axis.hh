@@ -43,9 +43,9 @@ class Axis : public Entity {
     glUniform3f(uniform_location, 1.0f, 0.0f, 0.0f);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, nullptr);
     glUniform3f(uniform_location, 0.0f, 1.0f, 0.0f);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)8);  // 2* unsigned int
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void *)8);  // 2* unsigned int
     glUniform3f(uniform_location, 0.0f, 0.0f, 1.0f);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)16);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void *)16);
     vertex_object_.unbind();
   }
 

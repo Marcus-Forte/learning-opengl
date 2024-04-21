@@ -22,6 +22,5 @@ class Points : public Entity {
 
  private:
   float point_size_ = 1.0;
-  ;
 };
 }  // namespace entity

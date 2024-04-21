@@ -1,16 +1,34 @@
 #include "grpc_listener.hh"
+
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 
 namespace grpc_listener {
-::grpc::Status addToSceneImpl::addPoint(::grpc::ServerContext* context, const ::Point3* request,
-                                        ::google::protobuf::Empty* response) {
+::grpc::Status addToSceneImpl::addPoint(::grpc::ServerContext *context, const ::Point3 *request,
+                                        ::google::protobuf::Empty *response) {
+  queue_.mutex.lock();
   queue_.point_queue.push_front(*request);
+  queue_.mutex.unlock();
   return ::grpc::Status::OK;
 }
 
-::grpc::Status addToSceneImpl::addPointCloud(::grpc::ServerContext* context, const ::PointCloud3* request,
-                                             ::google::protobuf::Empty* response) {
+::grpc::Status addToSceneImpl::addPointCloud(::grpc::ServerContext *context, const ::PointCloud3 *request,
+                                             ::google::protobuf::Empty *response) {
+  queue_.mutex.lock();
   queue_.pointcloud_queue.push_front(*request);
+  queue_.mutex.unlock();
+  return ::grpc::Status::OK;
+}
+
+grpc::Status addToSceneImpl::steamPointClouds(::grpc::ServerContext *context,
+                                              ::grpc::ServerReader<::PointCloud3> *reader,
+                                              ::google::protobuf::Empty *response) {
+  PointCloud3 cloud;
+  while (reader->Read(&cloud)) {
+    queue_.mutex.lock();
+    queue_.pointcloud_queue.push_front(cloud);
+    queue_.mutex.unlock();
+  };
+
   return ::grpc::Status::OK;
 }
 void gRPCListener::startAsync() {
@@ -35,4 +53,4 @@ void gRPCListener::shutDown() {
   server_->Shutdown();
   listener_thread_.join();
 }
-}
+}  // namespace grpc_listener

@@ -21,8 +21,7 @@ class Camera {
 
   void translateLocalZ(float delta) { position_ += cameraZ_ * delta; }
 
-  /// @brief rotate cameraX around Y local
-  /// @return
+  /// @brief rotate cameraX around Y local in radians.
   void rotateLocalY(float delta) {
     auto cameraY = glm::cross(cameraX_, cameraZ_);
     glm::mat4 rotation(1.0f);
@@ -31,6 +30,7 @@ class Camera {
     applyTransform3(cameraX_, rotation);
     applyTransform3(cameraZ_, rotation);
   }
+
   void rotateLocalZ(float delta) {
     glm::mat4 rotation(1.0f);
     rotation = glm::rotate(rotation, delta, cameraZ_);
@@ -44,7 +44,7 @@ class Camera {
     // applyTransform3(cameraY_, rotation);
   }
 
-  inline const glm::mat4& getMVP() const {
+  inline const glm::mat4 &getMVP() const {
     glm::mat4 lookAt = glm::lookAt(position_, position_ + cameraX_, cameraZ_);
     MVP_ = perspective_ * lookAt;
 
@@ -54,8 +54,10 @@ class Camera {
   glm::vec3 getPosition() const { return position_; }
   glm::vec3 getLocalX() const { return cameraX_; }
 
+  void setPosition(float x, float y, float z) { position_ = glm::vec3(x, y, z); }
+
  private:
-  void applyTransform3(glm::vec3& vec3, const glm::mat4& transform) {
+  void applyTransform3(glm::vec3 &vec3, const glm::mat4 &transform) {
     glm::vec4 vec4_rep = glm::vec4(vec3, 1.0f);
     vec4_rep = transform * vec4_rep;
     vec3 = glm::vec3(vec4_rep);

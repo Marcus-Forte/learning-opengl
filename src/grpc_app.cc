@@ -13,11 +13,15 @@
 #include "layouts/pointAttribute.hpp"
 #include "renderer.hh"
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   Renderer renderer;
+  auto &camera = renderer.getCamera();
 
-  std::shared_ptr<entity::Axis> axis(new entity::Axis(0, 0, 0));
-  renderer.addEntity(axis, "axis");
+  camera.rotateLocalY(-1.57);
+  camera.setPosition(0, 0, 20.0);
+
+  // std::shared_ptr<entity::Axis> axis(new entity::Axis(0, 0, 0));
+  // renderer.addEntity(axis, "axis");
 
   grpc_listener::SharedQueue shared_queue;
   grpc_listener::gRPCListener listener(shared_queue);

@@ -13,10 +13,12 @@ message Point3 {
 message PointCloud3 { 
     repeated Point3 points=1;
     optional string entity_name=2;
+    optional float point_size=3;
 }
 
 
 service addToScene {
-    rpc addPoint(Point3) returns (google.protobuf.Empty){}
-    rpc addPointCloud(PointCloud3) returns (google.protobuf.Empty){}
+    rpc addPoint(Point3) returns (google.protobuf.Empty);
+    rpc addPointCloud(PointCloud3) returns (google.protobuf.Empty);
+    rpc steamPointClouds(stream PointCloud3) returns (google.protobuf.Empty);
 }

@@ -16,7 +16,7 @@ class Entity {
   }
 
   // TODO have renderer call it as friend?
-  const std::unique_ptr<ShaderProgram>& getShaderProgram() const { return shader_program_; }
+  const std::unique_ptr<ShaderProgram> &getShaderProgram() const { return shader_program_; }
   virtual void draw() const {
     if (!shader_program_) throw std::runtime_error("No shader program set for entity.");
     vertex_object_.bind();

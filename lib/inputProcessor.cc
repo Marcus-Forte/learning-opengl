@@ -8,20 +8,20 @@
 std::unique_ptr<InputProcessor> InputProcessor::singleton_ = 0;
 
 /* Static forwaders */
-void InputProcessor::keyboardCallbackFW(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void InputProcessor::keyboardCallbackFW(GLFWwindow *window, int key, int scancode, int action, int mods) {
   singleton_->keyboardCallback(window, key, scancode, action, mods);
 }
 
-void InputProcessor::mouseCallbackFW(GLFWwindow* window, double xpos, double ypos) {
+void InputProcessor::mouseCallbackFW(GLFWwindow *window, double xpos, double ypos) {
   singleton_->mouseCallback(window, xpos, ypos);
 }
 
-void InputProcessor::mouseButtonCallbackFW(GLFWwindow* window, int button, int action, int mods) {
+void InputProcessor::mouseButtonCallbackFW(GLFWwindow *window, int button, int action, int mods) {
   singleton_->mouseButtonCallback(window, button, action, mods);
 }
 /* */
 
-void InputProcessor::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void InputProcessor::keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
   if (!camera_ref_) throw std::runtime_error("Camera object not set by inputProcessor.\n");
 
   if (mods == GLFW_MOD_SHIFT) {
@@ -40,7 +40,7 @@ void InputProcessor::keyboardCallback(GLFWwindow* window, int key, int scancode,
   if (key == GLFW_KEY_R) camera_ref_->reset();
 }
 
-void InputProcessor::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+void InputProcessor::mouseCallback(GLFWwindow *window, double xpos, double ypos) {
   if (!mouse_pressed_) return;
   static double last_xpos = 0;
   static double last_ypos = 0;
@@ -73,7 +73,7 @@ void InputProcessor::mouseCallback(GLFWwindow* window, double xpos, double ypos)
   }
 }
 
-void InputProcessor::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+void InputProcessor::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
   if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
     InputProcessor::mouse_pressed_ = true;
   }

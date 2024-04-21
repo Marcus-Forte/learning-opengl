@@ -14,16 +14,16 @@ Renderer::Renderer() {
     exit(-1);
   }
 
-  auto& input_processor = InputProcessor::getInstance(&camera_);
+  auto &input_processor = InputProcessor::getInstance(&camera_);
 
   glfwMakeContextCurrent(window_);
-  glfwSwapInterval( 1 );
+  glfwSwapInterval(1);
   glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
   glfwSetKeyCallback(window_, InputProcessor::keyboardCallbackFW);
   glfwSetCursorPosCallback(window_, InputProcessor::mouseCallbackFW);
   glfwSetMouseButtonCallback(window_, InputProcessor::mouseButtonCallbackFW);
   glfwSetFramebufferSizeCallback(window_,
-                                 [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); });
+                                 [](GLFWwindow *window, int width, int height) { glViewport(0, 0, width, height); });
   // exit(0);
   GLenum err = glewInit();
   if (err != GLEW_OK) {
@@ -37,16 +37,16 @@ Renderer::~Renderer() { glfwTerminate(); }
 
 void Renderer::renderLoop() const {
   while (!glfwWindowShouldClose(window_)) {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_PROGRAM_POINT_SIZE);
 
-    for (const auto& callback : callbacks_) {
+    for (const auto &callback : callbacks_) {
       callback();
     }
 
-    for (const auto& entity : entities_) {
+    for (const auto &entity : entities_) {
       // Apply camera transform to all entities
 
       int program_id = entity.second->getShaderProgram()->getId();

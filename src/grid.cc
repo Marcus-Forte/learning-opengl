@@ -3,7 +3,7 @@
 #include <thread>
 
 #include "entities/line.hh"
-void add_grid(Renderer* renderer) {
+void add_grid(Renderer *renderer) {
   static const float x_ = 5.0f;
   static const float y_ = 5.0f;
   float step_ = 0.5;

@@ -17,7 +17,7 @@
 
 #include "grid.hh"
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   auto testCloud = std::filesystem::path(TEST_CLOUD_DIR) / "bunny.pcd";
 
   auto loaded_points = loadFile(testCloud.string());
