@@ -1,27 +1,25 @@
 #pragma once
 
-#include "entity.hh"
-#include "layouts/lineAttribute.hpp"
-#include "shaderLoader.hh"
+#include <memory>
+
+#include "../entity.hh"
+#include "../layouts/lineAttribute.hpp"
 
 namespace entity {
 class Line : public Entity {
  public:
   Line(float p0_x, float p0_y, float p0_z, float p1_x, float p1_y, float p1_z, float r = 1.0, float g = 0.0,
        float b = 0.0)
-      : p0_{p0_x, p0_y, p0_z}, p1_{p1_x, p1_y, p1_z}, color_{r, g, b} {
+      : Entity(std::make_shared<ShaderProgram>("../shaders/line-vert.glsl", "../shaders/fragment.glsl")),
+        p0_{p0_x, p0_y, p0_z},
+        p1_{p1_x, p1_y, p1_z},
+        color_{r, g, b} {
     GLLineData line_data{p0_[0], p0_[1], p0_[2], p1_[0], p1_[1], p1_[2]};
     VertexBufferLayout layout_;
     layout_.addAttribute(VertexBufferLayout::float_, 3);  // pos
     vertex_object_.setLayout(layout_);
     vertex_object_.setData(&line_data, 2, sizeof(float) * 3);
 
-    shaderLoader line_vertex_shader("../shaders/line-vert.glsl", shaderLoader::ShaderType::VERTEX);
-    auto lineVertexShader = line_vertex_shader.compile();
-    shaderLoader fragment_shader("../shaders/fragment.glsl", shaderLoader::ShaderType::FRAGMENT);
-    auto fragmentShader = fragment_shader.compile();
-
-    shader_program_.reset(new ShaderProgram(lineVertexShader, fragmentShader));
     // Add color
     int program_id = shader_program_->getId();
     glUseProgram(program_id);

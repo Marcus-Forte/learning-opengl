@@ -27,9 +27,7 @@
 			]
 		}
 	},
-
-	"mounts": [{ "source": "dev-cache", "target": "/app/build", "type": "volume" }],
-
+	
 	"workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached",
 	"workspaceFolder": "/app"
 	

@@ -1,13 +1,17 @@
 #pragma once
 
-#include "entity.hh"
+#include <memory>
+
+#include "../entity.hh"
 
 namespace entity {
 class Axis : public Entity {
  public:
   using Entity::vertex_object_;
-  Axis(float ox, float oy, float oz, float length = 1.0f) {
+  Axis(float ox, float oy, float oz, float length = 1.0f)
+      : Entity(std::make_shared<ShaderProgram>("../shaders/line-vert.glsl", "../shaders/fragment.glsl")) {
     // Four points needed.
+
     float axis_data[12]{ox, oy, oz, ox + length, oy, oz, ox, oy + length, oz, ox, oy, oz + length};
 
     VertexBufferLayout layout_;
@@ -24,13 +28,6 @@ class Axis : public Entity {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), sequence, GL_STATIC_DRAW);
     vertex_object_.unbind();
-
-    shaderLoader line_vertex_shader("../shaders/line-vert.glsl", shaderLoader::ShaderType::VERTEX);
-    auto lineVertexShader = line_vertex_shader.compile();
-    shaderLoader fragment_shader("../shaders/fragment.glsl", shaderLoader::ShaderType::FRAGMENT);
-    auto fragmentShader = fragment_shader.compile();
-
-    shader_program_.reset(new ShaderProgram(lineVertexShader, fragmentShader));
   }
 
   void setAxisWidth(float width) { line_width_ = width; }

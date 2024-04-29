@@ -1,6 +1,6 @@
 #pragma once
 
-#include "layouts/pointAttribute.hpp"
+#include "../lib/layouts/pointAttribute.hpp"
 #include <fstream>
 #include <string>
 

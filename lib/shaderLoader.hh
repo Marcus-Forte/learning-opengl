@@ -9,13 +9,14 @@ class shaderLoader {
  public:
   enum class ShaderType { VERTEX = GL_VERTEX_SHADER, FRAGMENT = GL_FRAGMENT_SHADER };
 
-  shaderLoader(const std::string &path, ShaderType type) {
-    if (!std::filesystem::is_regular_file(path)) throw std::runtime_error("shader path is not a file: " + path);
+  shaderLoader(const std::filesystem::path& path, ShaderType type) {
+    if (!std::filesystem::is_regular_file(path))
+      throw std::runtime_error("shader path is not a file: " + path.string());
 
     std::string source;
     std::ifstream file(path);
 
-    if (!file.is_open()) throw std::runtime_error("Unable to open shader: " + path);
+    if (!file.is_open()) throw std::runtime_error("Unable to open shader: " + path.string());
 
     std::string line;
     while (getline(file, line)) {
@@ -24,7 +25,7 @@ class shaderLoader {
 
     file.close();
 
-    const char *vertexShaderSource = source.c_str();
+    const char* vertexShaderSource = source.c_str();
 
     shaderId = glCreateShader((GLenum)type);
     glShaderSource(shaderId, 1, &vertexShaderSource, NULL);

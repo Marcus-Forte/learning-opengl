@@ -1,6 +1,6 @@
 FROM ubuntu:mantic as deps
 
-RUN apt-get update && apt-get install -y cmake build-essential git libglfw3-dev libglew-dev libglm-dev clang-format
+RUN apt-get update && apt-get install -y cmake build-essential git libglfw3-dev libglew-dev libglm-dev clang-format clangd
 
 # gRPC
 FROM deps as grpc

@@ -1,12 +1,15 @@
 #pragma once
 
-#include "entity.hh"
-#include "layouts/pointAttribute.hpp"
+#include <memory>
+
+#include "../entity.hh"
+#include "../layouts/pointAttribute.hpp"
 
 namespace entity {
 class Points : public Entity {
  public:
-  Points(std::vector<GLPointData> points) {
+  Points(std::vector<GLPointData> points)
+      : Entity(std::make_shared<ShaderProgram>("../shaders/point-vert.glsl", "../shaders/fragment.glsl")) {
     vertex_object_.setLayout<GLPointData>(2, {3, 3}, {GL_FLOAT, GL_FLOAT});
     vertex_object_.setData(points.data(), points.size(), sizeof(GLPointData));
   }
