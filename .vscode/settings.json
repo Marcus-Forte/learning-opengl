@@ -1,0 +1,7 @@
+{
+    "cmake.configureOnOpen": true,
+    "cmake.options.statusBarVisibility": "compact",
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}/build"
+    }
+}
