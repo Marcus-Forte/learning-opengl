@@ -2,7 +2,7 @@
 
 #include <thread>
 
-#include "entities/line.hh"
+#include "entities/Line.hh"
 void add_grid(Renderer *renderer) {
   static const float x_ = 5.0f;
   static const float y_ = 5.0f;

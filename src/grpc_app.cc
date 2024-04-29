@@ -3,9 +3,9 @@
 #include <filesystem>
 #include <iostream>
 
-#include "entities/axis.hh"
-#include "entities/line.hh"
-#include "entities/points.hh"
+#include "entities/Axis.hh"
+#include "entities/Line.hh"
+#include "entities/Points.hh"
 #include "grid.hh"
 #include "grpc_conv.hh"
 #include "grpc_listener.hh"

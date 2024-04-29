@@ -4,7 +4,7 @@
 
 #include "shaderLoader.hh"
 #include "shaderProgram.hh"
-#include "vertexObject.h"
+#include "vertexObject.hh"
 class Entity {
  public:
   Entity(const std::shared_ptr<ShaderProgram>& shader) : shader_program_(shader) {}

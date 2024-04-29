@@ -2,14 +2,11 @@
 
 # Dependencies
 
-- Make sure your GPU drivers are installed.
-- `sudo apt install libglew-dev libglfw3-dev`
+- See `.devcontainer/Dockerfile`
 
 # Resources
 
 - Theoretical background: https://learnopengl.com/
 
-
 ## TODO
-- Allow pointcloud size as parameter
-- Fix seg. faults when publishing multiple points
+- Have a shared, pool of shaders instead of compiling per-entity.

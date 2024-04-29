@@ -3,9 +3,9 @@
 #include <filesystem>
 #include <iostream>
 
-#include "entities/axis.hh"
-#include "entities/line.hh"
-#include "entities/points.hh"
+#include "entities/Axis.hh"
+#include "entities/Line.hh"
+#include "entities/Points.hh"
 #include "layouts/lineAttribute.hpp"
 #include "layouts/pointAttribute.hpp"
 #include "pointsLoader.hpp"
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
   auto testCloud2 = std::filesystem::path(TEST_CLOUD_DIR) / "cat.pcd";
   auto loaded_points2 = loadFile(testCloud2.string());
   std::shared_ptr<entity::Points> pointcloud2(new entity::Points(loaded_points2));
-  pointcloud2->setPointSize(10.0);
+  pointcloud2->setPointSize(15.0);
   renderer.addEntity(pointcloud2, "cloud2");
 
   add_grid(&renderer);

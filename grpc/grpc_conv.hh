@@ -1,5 +1,5 @@
 #pragma once
-#include "entities/points.hh"
+#include "entities/Points.hh"
 #include "grpc_listener.hh"
 #include "renderer.hh"
 /* GRPC conversion utilities. */
@@ -35,7 +35,7 @@ static std::shared_ptr<entity::Points> fromgRPC(const PointCloud3 &pointcloud) {
   return new_pts;
 }
 
-void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer) {
+inline void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer) {
   static int s_grpc_entity_count = 0;
   if (shared_queue.point_queue.size()) {
     auto &&pt = shared_queue.point_queue.front();

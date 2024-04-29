@@ -16,35 +16,36 @@ find_package(glm REQUIRED) # For algebra
 add_library(gl_lib
 lib/renderer.cc
 lib/inputProcessor.cc
-lib/shaderProgram.cc)
+lib/shaderProgram.cc
+lib/camera.cc)
+
 target_link_libraries(gl_lib
   OpenGL::GL glfw GLEW::GLEW)
+
+target_include_directories(gl_lib PUBLIC include)
 
 add_executable(app
   src/app.cc
   src/grid.cc)
 target_link_libraries(app gl_lib)
-target_include_directories(app PUBLIC lib ext)
+target_include_directories(app PUBLIC ext)
 
 add_definitions(-DTEST_CLOUD_DIR="${CMAKE_CURRENT_SOURCE_DIR}/clouds")
 
 if( ${FORMAT} )
 message(STATUS "using clang-format")
 file(GLOB SOURCEFILES 
-"lib/**/*.cc"
-"lib/**/*.hh"
+"lib/*.cc"
 "grpc/*.cc"
 "grpc/*.hh"
 "src/*.cc"
 "src/*.hh"
+"include/*.hh"
 )
 string (REPLACE ";" " " SOURCEFILES "${SOURCEFILES}")
-# message(STATUS ${SOURCEFILES})
 add_custom_target(format ALL
 COMMAND sh -c "clang-format -i ${SOURCEFILES} --verbose")
 endif()
-
-
 
 # 
 if(BUILD_GRPC_LISTENER)

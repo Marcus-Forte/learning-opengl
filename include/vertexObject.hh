@@ -6,7 +6,7 @@
 #include <GL/gl.h>
 #endif
 
-#include "vertexBufferLayout.h"
+#include "vertexBufferLayout.hh"
 /*
 Primer on VAOS:
 - glBindVertexArray() records subsequent calls from:

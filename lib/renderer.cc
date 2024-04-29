@@ -1,6 +1,7 @@
 #include "renderer.hh"
 
 #include "inputProcessor.hh"
+
 Renderer::Renderer() {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -36,11 +37,12 @@ Renderer::Renderer() {
 Renderer::~Renderer() { glfwTerminate(); }
 
 void Renderer::renderLoop() const {
+  glEnable(GL_PROGRAM_POINT_SIZE);
+
   while (!glfwWindowShouldClose(window_)) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_PROGRAM_POINT_SIZE);
+    // glEnable(GL_DEPTH_TEST);
 
     for (const auto &callback : callbacks_) {
       callback();
