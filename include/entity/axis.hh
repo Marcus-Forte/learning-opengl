@@ -3,13 +3,14 @@
 #include <memory>
 
 #include "../entity.hh"
+#include "shaderProgram.hh"
 
 namespace entity {
 class Axis : public Entity {
  public:
   using Entity::vertex_object_;
-  Axis(float ox, float oy, float oz, float length = 1.0f)
-      : Entity(std::make_shared<ShaderProgram>("../shaders/line-vert.glsl", "../shaders/fragment.glsl")) {
+  Axis(const std::shared_ptr<ShaderProgram>& program, float ox, float oy, float oz, float length = 1.0f)
+      : Entity(program) {
     // Four points needed.
 
     float axis_data[12]{ox, oy, oz, ox + length, oy, oz, ox, oy + length, oz, ox, oy, oz + length};

@@ -4,12 +4,13 @@
 
 #include "../entity.hh"
 #include "../layouts/pointAttribute.hpp"
+#include "shaderProgram.hh"
 
 namespace entity {
 class Points : public Entity {
  public:
-  Points(std::vector<GLPointData> points)
-      : Entity(std::make_shared<ShaderProgram>("../shaders/point-vert.glsl", "../shaders/point-frag.glsl")) {
+  Points(const std::shared_ptr<ShaderProgram>& program, const std::vector<GLPointData>& points )
+      : Entity(program) {
     vertex_object_.setLayout<GLPointData>(2, {3, 3}, {GL_FLOAT, GL_FLOAT});
     vertex_object_.setData(points.data(), points.size(), sizeof(GLPointData));
   }

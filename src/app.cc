@@ -3,9 +3,7 @@
 #include <filesystem>
 #include <iostream>
 
-#include "entities/Axis.hh"
-#include "entities/Line.hh"
-#include "entities/Points.hh"
+#include "entity/factory.hh"
 #include "layouts/lineAttribute.hpp"
 #include "layouts/pointAttribute.hpp"
 #include "pointsLoader.hpp"
@@ -23,19 +21,20 @@ int main(int argc, char **argv) {
   auto loaded_points = loadFile(testCloud.string());
 
   Renderer renderer;
+  entity::EntityFactory factory;
 
-  std::shared_ptr<entity::Points> pointcloud(new entity::Points(loaded_points));
+  auto pointcloud = factory.create_points(loaded_points);
   pointcloud->setPointSize(5.0);
   renderer.addEntity(pointcloud, "cloud");
 
   auto testCloud2 = std::filesystem::path(TEST_CLOUD_DIR) / "cat.pcd";
   auto loaded_points2 = loadFile(testCloud2.string());
-  std::shared_ptr<entity::Points> pointcloud2(new entity::Points(loaded_points2));
+  auto pointcloud2 = factory.create_points(loaded_points2);
   pointcloud2->setPointSize(15.0);
   renderer.addEntity(pointcloud2, "cloud2");
 
   add_grid(&renderer);
-  std::shared_ptr<entity::Axis> axis(new entity::Axis(0, 0, 0));
+  auto axis = factory.create_axis(0, 0, 0);
   renderer.addEntity(axis, "axis");
 
   renderer.renderLoop();

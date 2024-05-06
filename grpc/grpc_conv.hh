@@ -1,9 +1,14 @@
 #pragma once
-#include "entities/Points.hh"
+#include "entity/factory.hh"
 #include "grpc_listener.hh"
+#include "layouts/pointAttribute.hpp"
 #include "renderer.hh"
+
 /* GRPC conversion utilities. */
 using namespace grpc_listener;
+
+// Improve?
+static entity::EntityFactory g_factory;
 
 static GLPointData fromgRPCPt(const Point3 &pt) {
   float x = pt.x();
@@ -18,7 +23,7 @@ static GLPointData fromgRPCPt(const Point3 &pt) {
 static std::shared_ptr<entity::Points> fromgRPC(const Point3 &pt, float point_size = 5.0) {
   std::vector<GLPointData> pts;
   pts.push_back(fromgRPCPt(pt));
-  std::shared_ptr<entity::Points> new_pt(new entity::Points(pts));
+  auto new_pt = g_factory.create_points(pts);
   new_pt->setPointSize(point_size);
   return new_pt;
 }
@@ -28,7 +33,7 @@ static std::shared_ptr<entity::Points> fromgRPC(const PointCloud3 &pointcloud) {
   for (const auto &point : pointcloud.points()) {
     pts.push_back(fromgRPCPt(point));
   }
-  std::shared_ptr<entity::Points> new_pts(new entity::Points(pts));
+  auto new_pts = g_factory.create_points(pts);
   auto point_size = pointcloud.has_point_size() ? pointcloud.point_size() : 10.0;
 
   new_pts->setPointSize(point_size);

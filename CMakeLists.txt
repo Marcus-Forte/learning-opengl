@@ -17,7 +17,8 @@ add_library(gl_lib
 lib/renderer.cc
 lib/inputProcessor.cc
 lib/shaderProgram.cc
-lib/camera.cc)
+lib/camera.cc
+lib/entity/factory.cc)
 
 target_link_libraries(gl_lib
   OpenGL::GL glfw GLEW::GLEW)

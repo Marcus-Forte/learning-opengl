@@ -36,7 +36,7 @@ class VertexObject {
   /// @param data vertex data to copy from.
   /// @param num_vertices number of vertices.
   /// @param vertex_size size of each vertex in bytes.
-  void setData(void* data, size_t num_vertices, size_t vertex_size) {
+  void setData(const void* data, size_t num_vertices, size_t vertex_size) {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
     glBufferData(GL_ARRAY_BUFFER, num_vertices * vertex_size, data, GL_STATIC_DRAW);
     num_vertices_ = num_vertices;

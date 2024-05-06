@@ -4,13 +4,14 @@
 
 #include "../entity.hh"
 #include "../layouts/lineAttribute.hpp"
+#include "shaderProgram.hh"
 
 namespace entity {
 class Line : public Entity {
  public:
-  Line(float p0_x, float p0_y, float p0_z, float p1_x, float p1_y, float p1_z, float r = 1.0, float g = 0.0,
+  Line(const std::shared_ptr<ShaderProgram>& program, float p0_x, float p0_y, float p0_z, float p1_x, float p1_y, float p1_z, float r = 1.0, float g = 0.0,
        float b = 0.0)
-      : Entity(std::make_shared<ShaderProgram>("../shaders/line-vert.glsl", "../shaders/fragment.glsl")),
+      : Entity(program),
         p0_{p0_x, p0_y, p0_z},
         p1_{p1_x, p1_y, p1_z},
         color_{r, g, b} {
