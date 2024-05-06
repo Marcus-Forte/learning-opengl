@@ -10,6 +10,13 @@ message Point3 {
     optional float b=6;
 }
 
+// Named & Sized point 
+message NamedPoint3 { 
+    Point3 point=1;
+    float size = 2;
+    optional string name=3;
+}
+
 message PointCloud3 { 
     repeated Point3 points=1;
     optional string entity_name=2;
@@ -21,4 +28,5 @@ service addToScene {
     rpc addPoint(Point3) returns (google.protobuf.Empty);
     rpc addPointCloud(PointCloud3) returns (google.protobuf.Empty);
     rpc steamPointClouds(stream PointCloud3) returns (google.protobuf.Empty);
+    rpc streamNamedPoints(stream NamedPoint3) returns (google.protobuf.Empty);
 }

@@ -23,7 +23,8 @@
 		"vscode": {
 			"extensions": [
 				"ms-vscode.cpptools",
-				"ms-vscode.cmake-tools"
+				"ms-vscode.cmake-tools",
+				"zxh404.vscode-proto3"
 			]
 		}
 	}

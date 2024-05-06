@@ -2,6 +2,8 @@
 
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 
+// TODO mutex use?
+
 namespace grpc_listener {
 ::grpc::Status addToSceneImpl::addPoint(::grpc::ServerContext *context, const ::Point3 *request,
                                         ::google::protobuf::Empty *response) {
@@ -23,6 +25,7 @@ grpc::Status addToSceneImpl::steamPointClouds(::grpc::ServerContext *context,
                                               ::grpc::ServerReader<::PointCloud3> *reader,
                                               ::google::protobuf::Empty *response) {
   PointCloud3 cloud;
+
   while (reader->Read(&cloud)) {
     queue_.mutex.lock();
     queue_.pointcloud_queue.push_front(cloud);
@@ -31,6 +34,21 @@ grpc::Status addToSceneImpl::steamPointClouds(::grpc::ServerContext *context,
 
   return ::grpc::Status::OK;
 }
+
+grpc::Status addToSceneImpl::streamNamedPoints(::grpc::ServerContext *context,
+                                               ::grpc::ServerReader<::NamedPoint3> *reader,
+                                               ::google::protobuf::Empty *response) {
+  NamedPoint3 point;
+
+  while (reader->Read(&point)) {
+    queue_.mutex.lock();
+    queue_.named_point_queue.push_front(point);
+    queue_.mutex.unlock();
+  };
+
+  return ::grpc::Status::OK;
+}
+
 void gRPCListener::startAsync() {
   listener_thread_ = std::thread([this]() {
     addToSceneImpl service(shared_queue_);
