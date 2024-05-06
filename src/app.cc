@@ -10,10 +10,8 @@
 #include "renderer.hh"
 
 #ifndef TEST_CLOUD_DIR
-#error "Test cloud dir not defined!
+#error "Test cloud dir not defined!"
 #endif
-
-#include "grid.hh"
 
 int main(int argc, char **argv) {
   auto testCloud = std::filesystem::path(TEST_CLOUD_DIR) / "bunny.pcd";
@@ -33,7 +31,7 @@ int main(int argc, char **argv) {
   pointcloud2->setPointSize(15.0);
   renderer.addEntity(pointcloud2, "cloud2");
 
-  add_grid(&renderer);
+  factory.add_grid(&renderer, 0.5);
   auto axis = factory.create_axis(0, 0, 0);
   renderer.addEntity(axis, "axis");
 

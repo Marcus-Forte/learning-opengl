@@ -6,7 +6,7 @@
 	// "image": "dev",
 	"build": {
 		"dockerfile": "Dockerfile",
-		"target": "deps"
+		"target": "deps" // use `grpc` to build listener
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
@@ -26,10 +26,7 @@
 				"ms-vscode.cmake-tools"
 			]
 		}
-	},
-	
-	"workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached",
-	"workspaceFolder": "/app"
+	}
 	
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

@@ -26,8 +26,7 @@ target_link_libraries(gl_lib
 target_include_directories(gl_lib PUBLIC include)
 
 add_executable(app
-  src/app.cc
-  src/grid.cc)
+  src/app.cc)
 target_link_libraries(app gl_lib)
 target_include_directories(app PUBLIC ext)
 
@@ -53,5 +52,5 @@ if(BUILD_GRPC_LISTENER)
   add_subdirectory(grpc)
   add_executable(grpc_app src/grpc_app.cc)
   target_link_libraries(grpc_app gl_lib grpc_listener)
-  target_include_directories(grpc_app PUBLIC lib)
+  target_include_directories(grpc_app PUBLIC lib grpc)
 endif()
