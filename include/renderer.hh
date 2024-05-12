@@ -35,6 +35,8 @@ class Renderer {
     }
   }
 
+  inline void clearEntities() { entities_.clear(); }
+
   /// @brief Adds functions to be called
   /// each render loop.
   /// @param callback

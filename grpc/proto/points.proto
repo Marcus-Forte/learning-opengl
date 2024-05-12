@@ -29,4 +29,6 @@ service addToScene {
     rpc addPointCloud(PointCloud3) returns (google.protobuf.Empty);
     rpc steamPointClouds(stream PointCloud3) returns (google.protobuf.Empty);
     rpc streamNamedPoints(stream NamedPoint3) returns (google.protobuf.Empty);
+
+    rpc resetScene(google.protobuf.Empty) returns (google.protobuf.Empty);
 }

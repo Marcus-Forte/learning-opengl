@@ -88,4 +88,11 @@ inline void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer,
     shared_queue.named_point_queue.pop_front();
     shared_queue.mutex.unlock();
   }
+
+  if (shared_queue.reset_scene) {
+    renderer.clearEntities();
+
+    factory->add_grid(&renderer, 0.1);
+    shared_queue.reset_scene = false;
+  }
 }

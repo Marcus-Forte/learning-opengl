@@ -1,4 +1,5 @@
 #pragma once
+
 #include <queue>
 #include <thread>
 
@@ -15,6 +16,7 @@ struct SharedQueue {
   PointQueue point_queue;
   PointCloudQueue pointcloud_queue;
   NamedPointQueue named_point_queue;
+  bool reset_scene;
   std::mutex mutex;
 };
 
@@ -29,6 +31,9 @@ class addToSceneImpl : public addToScene::Service {
                                   ::google::protobuf::Empty *response) override;
   ::grpc::Status streamNamedPoints(::grpc::ServerContext *context, ::grpc::ServerReader<::NamedPoint3> *reader,
                                    ::google::protobuf::Empty *response) override;
+
+  ::grpc::Status resetScene(::grpc::ServerContext *context, const ::google::protobuf::Empty *request,
+                            ::google::protobuf::Empty *response) override;
 
  private:
   SharedQueue &queue_;

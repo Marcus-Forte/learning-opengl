@@ -49,6 +49,13 @@ grpc::Status addToSceneImpl::streamNamedPoints(::grpc::ServerContext *context,
   return ::grpc::Status::OK;
 }
 
+::grpc::Status addToSceneImpl::resetScene(::grpc::ServerContext *context, const ::google::protobuf::Empty *request,
+                                          ::google::protobuf::Empty *response) {
+  queue_.reset_scene = true;
+
+  return ::grpc::Status::OK;
+}
+
 void gRPCListener::startAsync() {
   listener_thread_ = std::thread([this]() {
     addToSceneImpl service(shared_queue_);
