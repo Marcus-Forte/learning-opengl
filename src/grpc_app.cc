@@ -14,15 +14,11 @@ int main(int argc, char **argv) {
   auto &camera = renderer.getCamera();
   auto entity_factory = std::make_shared<entity::EntityFactory>();
 
-  entity_factory->add_grid(&renderer, 0.1);
-
-  camera.rotateLocalY(-1.57);
-  camera.setPosition(0, 0, 2.0);
-
-  // std::shared_ptr<entity::Axis> axis(new entity::Axis(0, 0, 0));
-  // renderer.addEntity(axis, "axis");
+  camera.setPosition(-3.0, 1.0, 1.0);
 
   grpc_listener::SharedQueue shared_queue;
+  shared_queue.reset_scene = true;
+
   grpc_listener::gRPCListener listener(shared_queue);
   listener.startAsync();
 

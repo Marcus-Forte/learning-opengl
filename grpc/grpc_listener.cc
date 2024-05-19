@@ -2,22 +2,23 @@
 
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 
+#include <mutex>
+
 // TODO mutex use?
 
 namespace grpc_listener {
 ::grpc::Status addToSceneImpl::addPoint(::grpc::ServerContext *context, const ::Point3 *request,
                                         ::google::protobuf::Empty *response) {
-  queue_.mutex.lock();
+  std::lock_guard<std::mutex> lock(queue_.mutex);
   queue_.point_queue.push_front(*request);
-  queue_.mutex.unlock();
+
   return ::grpc::Status::OK;
 }
 
 ::grpc::Status addToSceneImpl::addPointCloud(::grpc::ServerContext *context, const ::PointCloud3 *request,
                                              ::google::protobuf::Empty *response) {
-  queue_.mutex.lock();
+  std::lock_guard<std::mutex> lock(queue_.mutex);
   queue_.pointcloud_queue.push_front(*request);
-  queue_.mutex.unlock();
   return ::grpc::Status::OK;
 }
 
@@ -27,9 +28,8 @@ grpc::Status addToSceneImpl::steamPointClouds(::grpc::ServerContext *context,
   PointCloud3 cloud;
 
   while (reader->Read(&cloud)) {
-    queue_.mutex.lock();
+    std::lock_guard<std::mutex> lock(queue_.mutex);
     queue_.pointcloud_queue.push_front(cloud);
-    queue_.mutex.unlock();
   };
 
   return ::grpc::Status::OK;
@@ -41,9 +41,8 @@ grpc::Status addToSceneImpl::streamNamedPoints(::grpc::ServerContext *context,
   NamedPoint3 point;
 
   while (reader->Read(&point)) {
-    queue_.mutex.lock();
+    std::lock_guard<std::mutex> lock(queue_.mutex);
     queue_.named_point_queue.push_front(point);
-    queue_.mutex.unlock();
   };
 
   return ::grpc::Status::OK;
@@ -52,7 +51,6 @@ grpc::Status addToSceneImpl::streamNamedPoints(::grpc::ServerContext *context,
 ::grpc::Status addToSceneImpl::resetScene(::grpc::ServerContext *context, const ::google::protobuf::Empty *request,
                                           ::google::protobuf::Empty *response) {
   queue_.reset_scene = true;
-
   return ::grpc::Status::OK;
 }
 
