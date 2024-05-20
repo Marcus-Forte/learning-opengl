@@ -11,7 +11,7 @@
 /* GRPC conversion utilities. */
 using namespace grpc_listener;
 
-static int g_grpc_entity_count = 0;
+static unsigned long g_grpc_entity_count = 0;
 
 static GLPointData fromgRPCPt(const Point3 &pt) {
   float x = pt.x();
