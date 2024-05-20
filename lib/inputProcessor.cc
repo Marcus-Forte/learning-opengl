@@ -3,7 +3,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/matrix.hpp>
-#include <iostream>
 
 std::unique_ptr<InputProcessor> InputProcessor::singleton_ = 0;
 
@@ -23,6 +22,8 @@ void InputProcessor::mouseButtonCallbackFW(GLFWwindow *window, int button, int a
 
 void InputProcessor::keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
   if (!camera_ref_) throw std::runtime_error("Camera object not set by inputProcessor.\n");
+
+  pressed_mod_key_ = mods;
 
   if (mods == GLFW_MOD_SHIFT) {
     shift_pressed_ = true;
@@ -83,10 +84,15 @@ void InputProcessor::mouseButtonCallback(GLFWwindow *window, int button, int act
   }
 }
 
-void InputProcessor::moveCameraOnKey(int key, bool mod) const {
-  float speed = 1.0;
+void InputProcessor::moveCameraOnKey(int key, int mod) const {
+  float speed = 0.1;
+  float factor = 0.5;
 
-  float factor = mod ? 0.5 : 0.1;
+  if (mod == GLFW_MOD_SHIFT)
+    factor = 1.0;
+  else if (mod == GLFW_MOD_ALT)
+    factor = 0.1;
+
   float delta = speed * factor;
   switch (key) {
     case GLFW_KEY_W:
@@ -122,7 +128,7 @@ void InputProcessor::moveCameraOnKey(int key, bool mod) const {
 void InputProcessor::inputProcessorThread() {
   while (running_) {
     for (auto key : pressed_keymap_) {
-      moveCameraOnKey(key, shift_pressed_);
+      moveCameraOnKey(key, pressed_mod_key_);
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(15));

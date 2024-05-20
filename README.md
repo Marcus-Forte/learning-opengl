@@ -1,5 +1,8 @@
 # Learning OpenGL
 
+Simple OpenGL renderer that also accepts drawing objects described by gRPC requests.
+
+
 # Dependencies
 
 - See `.devcontainer/Dockerfile`
@@ -9,4 +12,3 @@
 - Theoretical background: https://learnopengl.com/
 
 ## TODO
-- Have a shared, pool of shaders instead of compiling per-entity.

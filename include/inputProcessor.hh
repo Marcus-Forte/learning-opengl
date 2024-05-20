@@ -40,12 +40,13 @@ class InputProcessor {
     thread_ = std::thread(&InputProcessor::inputProcessorThread, this);
   }
 
-  void moveCameraOnKey(int key, bool mod = false) const;
+  void moveCameraOnKey(int key, int mod = false) const;
 
   static std::unique_ptr<InputProcessor> singleton_;
   Camera *camera_ref_;
   bool mouse_pressed_ = false;
   bool shift_pressed_ = false;
+  int pressed_mod_key_;
 
   std::thread thread_;
   bool running_;
