@@ -13,7 +13,7 @@ using namespace grpc_listener;
 
 static unsigned long g_grpc_entity_count = 0;
 
-static GLPointData fromgRPCPt(const Point3 &pt) {
+static GLPointData fromgRPCPt(const gl::Point3 &pt) {
   float x = pt.x();
   float y = pt.y();
   float z = pt.z();
@@ -23,7 +23,8 @@ static GLPointData fromgRPCPt(const Point3 &pt) {
   return {x, y, z, r, g, b};
 }
 
-static std::shared_ptr<entity::Points> fromgRPC(const Point3 &pt, const std::shared_ptr<entity::EntityFactory> &factory,
+static std::shared_ptr<entity::Points> fromgRPC(const gl::Point3 &pt,
+                                                const std::shared_ptr<entity::EntityFactory> &factory,
                                                 float point_size = 5.0) {
   std::vector<GLPointData> pts;
   pts.push_back(fromgRPCPt(pt));
@@ -32,7 +33,7 @@ static std::shared_ptr<entity::Points> fromgRPC(const Point3 &pt, const std::sha
   return new_pt;
 }
 
-static std::shared_ptr<entity::Points> fromgRPC(const NamedPoint3 &pt,
+static std::shared_ptr<entity::Points> fromgRPC(const gl::NamedPoint3 &pt,
                                                 const std::shared_ptr<entity::EntityFactory> &factory) {
   std::vector<GLPointData> pts;
   pts.push_back(fromgRPCPt(pt.point()));
@@ -41,7 +42,7 @@ static std::shared_ptr<entity::Points> fromgRPC(const NamedPoint3 &pt,
   return new_pt;
 }
 
-static std::shared_ptr<entity::Points> fromgRPC(const PointCloud3 &pointcloud,
+static std::shared_ptr<entity::Points> fromgRPC(const gl::PointCloud3 &pointcloud,
                                                 const std::shared_ptr<entity::EntityFactory> &factory) {
   std::vector<GLPointData> pts;
   for (const auto &point : pointcloud.points()) {

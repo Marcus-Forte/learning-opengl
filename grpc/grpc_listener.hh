@@ -7,9 +7,9 @@
 #include "proto/points.grpc.pb.h"
 #include "proto/points.pb.h"
 
-using PointQueue = std::deque<Point3>;
-using PointCloudQueue = std::deque<PointCloud3>;
-using NamedPointQueue = std::deque<NamedPoint3>;
+using PointQueue = std::deque<gl::Point3>;
+using PointCloudQueue = std::deque<gl::PointCloud3>;
+using NamedPointQueue = std::deque<gl::NamedPoint3>;
 
 namespace grpc_listener {
 struct SharedQueue {
@@ -20,16 +20,16 @@ struct SharedQueue {
   std::mutex mutex;
 };
 
-class addToSceneImpl : public addToScene::Service {
+class addToSceneImpl : public gl::addToScene::Service {
  public:
   addToSceneImpl(SharedQueue &queue) : queue_(queue) {}
-  ::grpc::Status addPoint(::grpc::ServerContext *context, const ::Point3 *request,
+  ::grpc::Status addPoint(::grpc::ServerContext *context, const gl::Point3 *request,
                           ::google::protobuf::Empty *response) override;
-  ::grpc::Status addPointCloud(::grpc::ServerContext *context, const ::PointCloud3 *request,
+  ::grpc::Status addPointCloud(::grpc::ServerContext *context, const gl::PointCloud3 *request,
                                ::google::protobuf::Empty *response) override;
-  ::grpc::Status steamPointClouds(::grpc::ServerContext *context, ::grpc::ServerReader<::PointCloud3> *reader,
-                                  ::google::protobuf::Empty *response) override;
-  ::grpc::Status streamNamedPoints(::grpc::ServerContext *context, ::grpc::ServerReader<::NamedPoint3> *reader,
+  ::grpc::Status streamPointClouds(::grpc::ServerContext *context, ::grpc::ServerReader<gl::PointCloud3> *reader,
+                                   ::google::protobuf::Empty *response) override;
+  ::grpc::Status streamNamedPoints(::grpc::ServerContext *context, ::grpc::ServerReader<gl::NamedPoint3> *reader,
                                    ::google::protobuf::Empty *response) override;
 
   ::grpc::Status resetScene(::grpc::ServerContext *context, const ::google::protobuf::Empty *request,

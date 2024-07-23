@@ -7,7 +7,7 @@
 // TODO mutex use?
 
 namespace grpc_listener {
-::grpc::Status addToSceneImpl::addPoint(::grpc::ServerContext *context, const ::Point3 *request,
+::grpc::Status addToSceneImpl::addPoint(::grpc::ServerContext *context, const gl::Point3 *request,
                                         ::google::protobuf::Empty *response) {
   std::lock_guard<std::mutex> lock(queue_.mutex);
   queue_.point_queue.push_front(*request);
@@ -15,17 +15,17 @@ namespace grpc_listener {
   return ::grpc::Status::OK;
 }
 
-::grpc::Status addToSceneImpl::addPointCloud(::grpc::ServerContext *context, const ::PointCloud3 *request,
+::grpc::Status addToSceneImpl::addPointCloud(::grpc::ServerContext *context, const gl::PointCloud3 *request,
                                              ::google::protobuf::Empty *response) {
   std::lock_guard<std::mutex> lock(queue_.mutex);
   queue_.pointcloud_queue.push_front(*request);
   return ::grpc::Status::OK;
 }
 
-grpc::Status addToSceneImpl::steamPointClouds(::grpc::ServerContext *context,
-                                              ::grpc::ServerReader<::PointCloud3> *reader,
-                                              ::google::protobuf::Empty *response) {
-  PointCloud3 cloud;
+grpc::Status addToSceneImpl::streamPointClouds(::grpc::ServerContext *context,
+                                               ::grpc::ServerReader<gl::PointCloud3> *reader,
+                                               ::google::protobuf::Empty *response) {
+  gl::PointCloud3 cloud;
 
   while (reader->Read(&cloud)) {
     std::lock_guard<std::mutex> lock(queue_.mutex);
@@ -36,9 +36,9 @@ grpc::Status addToSceneImpl::steamPointClouds(::grpc::ServerContext *context,
 }
 
 grpc::Status addToSceneImpl::streamNamedPoints(::grpc::ServerContext *context,
-                                               ::grpc::ServerReader<::NamedPoint3> *reader,
+                                               ::grpc::ServerReader<gl::NamedPoint3> *reader,
                                                ::google::protobuf::Empty *response) {
-  NamedPoint3 point;
+  gl::NamedPoint3 point;
 
   while (reader->Read(&point)) {
     std::lock_guard<std::mutex> lock(queue_.mutex);
@@ -60,7 +60,7 @@ void gRPCListener::startAsync() {
 
     grpc::ServerBuilder builder;
     grpc::reflection::InitProtoReflectionServerBuilderPlugin();
-    const std::string ip_port = "0.0.0.0:50051";
+    const std::string ip_port = "0.0.0.0:50052";
     builder.AddListeningPort(ip_port, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);
 
