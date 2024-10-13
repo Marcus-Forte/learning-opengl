@@ -5,7 +5,7 @@ if(gRPC_FOUND)
     message(STATUS "gRPC detected.")
 
     add_library(protolib 
-    proto/points.proto
+    proto/gl_server.proto
     )
 
     target_link_libraries(protolib gRPC::grpc++ gRPC::grpc++_reflection)
