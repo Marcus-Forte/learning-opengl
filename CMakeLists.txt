@@ -4,7 +4,7 @@ project(learning-opengl)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(BUILD_GRPC_LISTENER "use GRPC listener for objects" OFF)
+option(BUILD_GRPC_LISTENER "use GRPC listener for objects" ON)
 option(FORMAT "Format code" ON)
 
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)

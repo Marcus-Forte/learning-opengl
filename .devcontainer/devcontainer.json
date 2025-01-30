@@ -5,15 +5,18 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	// "image": "dev",
 	"build": {
-		"dockerfile": "Dockerfile",
-		"target": "deps" // use `grpc` to build listener
+		"dockerfile": "Dockerfile"
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+	"features": {
+		"ghcr.io/devcontainers/features/desktop-lite": {
+			"webPort": 6080
+		}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [50051, 50052],
+	"forwardPorts": [50051, 50052, 6080],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",

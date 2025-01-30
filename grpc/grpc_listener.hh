@@ -4,8 +4,8 @@
 #include <thread>
 
 #include "grpcpp/grpcpp.h"
-#include "proto/points.grpc.pb.h"
-#include "proto/points.pb.h"
+#include "proto/gl_server.grpc.pb.h"
+#include "proto/gl_server.pb.h"
 
 using PointQueue = std::deque<gl::Point3>;
 using PointCloudQueue = std::deque<gl::PointCloud3>;
