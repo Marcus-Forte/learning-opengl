@@ -58,41 +58,37 @@ static std::shared_ptr<entity::Points> fromgRPC(const gl::PointCloud3 &pointclou
 inline void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer,
                              const std::shared_ptr<entity::EntityFactory> &factory) {
   while (!shared_queue.point_queue.empty()) {
+    std::lock_guard<std::mutex> lock(shared_queue.mutex);
+
     auto &&pt = shared_queue.point_queue.front();
     auto gl_pt = fromgRPC(pt, factory);
     renderer.addEntity(gl_pt, "grpc_pt" + std::to_string(g_grpc_entity_count++));
 
-    {
-      std::lock_guard<std::mutex> lock(shared_queue.mutex);
-      shared_queue.point_queue.pop_front();
-    }
+    shared_queue.point_queue.pop_front();
   }
 
   while (!shared_queue.pointcloud_queue.empty()) {
-    // Extract points
+    std::lock_guard<std::mutex> lock(shared_queue.mutex);
+
     auto pointcloud = shared_queue.pointcloud_queue.front();
     auto &&gl_pointcloud = fromgRPC(pointcloud, factory);
     const std::string entity_name =
         pointcloud.has_entity_name() ? pointcloud.entity_name() : "grpc_pcloud" + std::to_string(g_grpc_entity_count++);
     renderer.addEntity(gl_pointcloud, entity_name);
 
-    {
-      std::lock_guard<std::mutex> lock(shared_queue.mutex);
-      shared_queue.pointcloud_queue.pop_front();
-    }
+    shared_queue.pointcloud_queue.pop_front();
   }
 
   while (!shared_queue.named_point_queue.empty()) {
+    std::lock_guard<std::mutex> lock(shared_queue.mutex);
+
     auto named_point = shared_queue.named_point_queue.front();
     auto &&gl_Point = fromgRPC(named_point, factory);
     const std::string entity_name =
         named_point.has_name() ? named_point.name() : "grpc_named_pt" + std::to_string(g_grpc_entity_count++);
     renderer.addEntity(gl_Point, entity_name);
 
-    {
-      std::lock_guard<std::mutex> lock(shared_queue.mutex);
-      shared_queue.named_point_queue.pop_front();
-    }
+    shared_queue.named_point_queue.pop_front();
   }
 
   if (shared_queue.reset_scene) {
