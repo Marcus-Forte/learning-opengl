@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
   shared_queue.reset_scene = false;
 
   grpc_listener::gRPCListener listener(shared_queue);
-  listener.startAsync();
+  listener.start();
 
   renderer.registerCallback([&] { processgRPCQueue(shared_queue, renderer, entity_factory); });
 

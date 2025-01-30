@@ -42,12 +42,12 @@ class addToSceneImpl : public gl::addToScene::Service {
 class gRPCListener {
  public:
   gRPCListener(SharedQueue &shared_queue) : shared_queue_(shared_queue) {}
-  void startAsync();
+  void start();
   void shutDown();
 
  private:
   SharedQueue &shared_queue_;
-  std::thread listener_thread_;
   std::unique_ptr<grpc::Server> server_;
+  std::shared_ptr<addToSceneImpl> service_;
 };
 }  // namespace grpc_listener
