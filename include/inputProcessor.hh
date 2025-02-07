@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-#include <iostream>
 #include <thread>
 #include <unordered_set>
 

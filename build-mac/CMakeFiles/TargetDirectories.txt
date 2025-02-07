@@ -1,0 +1,10 @@
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/CMakeFiles/gl_lib.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/CMakeFiles/app.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/CMakeFiles/format.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/CMakeFiles/grpc_app.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/CMakeFiles/edit_cache.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/CMakeFiles/rebuild_cache.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/grpc/CMakeFiles/protolib.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/grpc/CMakeFiles/grpc_listener.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/grpc/CMakeFiles/edit_cache.dir
+/Users/marcusforte/workspace/repos/learning-opengl/build-mac/grpc/CMakeFiles/rebuild_cache.dir

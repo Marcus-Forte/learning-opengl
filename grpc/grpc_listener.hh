@@ -1,15 +1,19 @@
 #pragma once
 
-#include <queue>
-#include <thread>
+#include <boost/lockfree/spsc_queue.hpp>
 
 #include "grpcpp/grpcpp.h"
 #include "proto/gl_server.grpc.pb.h"
 #include "proto/gl_server.pb.h"
 
-using PointQueue = std::deque<gl::Point3>;
-using PointCloudQueue = std::deque<gl::PointCloud3>;
-using NamedPointQueue = std::deque<gl::NamedPoint3>;
+constexpr size_t g_num_elements = 1024;
+
+/**
+ * @brief lockfree queues. `grpc_listener.cc` is the producer (gRPC thread).
+ */
+using PointQueue = boost::lockfree::spsc_queue<gl::Point3, boost::lockfree::capacity<g_num_elements>>;
+using PointCloudQueue = boost::lockfree::spsc_queue<gl::PointCloud3, boost::lockfree::capacity<g_num_elements>>;
+using NamedPointQueue = boost::lockfree::spsc_queue<gl::NamedPoint3, boost::lockfree::capacity<g_num_elements>>;
 
 namespace grpc_listener {
 struct SharedQueue {
@@ -17,7 +21,6 @@ struct SharedQueue {
   PointCloudQueue pointcloud_queue;
   NamedPointQueue named_point_queue;
   bool reset_scene;
-  std::mutex mutex;
 };
 
 class addToSceneImpl : public gl::addToScene::Service {

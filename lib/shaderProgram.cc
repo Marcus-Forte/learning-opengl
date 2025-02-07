@@ -1,5 +1,7 @@
 #include "shaderProgram.hh"
 
+#include <iostream>
+
 #include "shaderLoader.hh"
 
 ShaderProgram::ShaderProgram(const std::filesystem::path& vertex_shader_path,

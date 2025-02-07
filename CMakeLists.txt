@@ -50,7 +50,7 @@ endif()
 # 
 if(BUILD_GRPC_LISTENER)
   add_subdirectory(grpc)
-  add_executable(grpc_app src/grpc_app.cc)
+  add_executable(grpc_app src/grpc_app.cc src/grpc_conv.cc)
   target_link_libraries(grpc_app gl_lib grpc_listener)
   target_include_directories(grpc_app PUBLIC lib grpc)
 endif()

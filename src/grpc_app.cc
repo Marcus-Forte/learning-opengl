@@ -1,12 +1,8 @@
 
 
-#include <filesystem>
-#include <iostream>
-
+#include "entity/factory.hh"
 #include "grpc_conv.hh"
 #include "grpc_listener.hh"
-#include "layouts/lineAttribute.hpp"
-#include "layouts/pointAttribute.hpp"
 #include "renderer.hh"
 
 int main(int argc, char **argv) {
@@ -19,6 +15,7 @@ int main(int argc, char **argv) {
   renderer.addEntity(axis, "axis");
   // camera.setPosition(-3.0, 1.0, 1.0);
 
+  /// \todo improve encapsulation.
   grpc_listener::SharedQueue shared_queue;
   shared_queue.reset_scene = false;
 

@@ -1,11 +1,8 @@
 
 
 #include <filesystem>
-#include <iostream>
 
 #include "entity/factory.hh"
-#include "layouts/lineAttribute.hpp"
-#include "layouts/pointAttribute.hpp"
 #include "pointsLoader.hpp"
 #include "renderer.hh"
 

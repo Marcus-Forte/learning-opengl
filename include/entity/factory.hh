@@ -4,7 +4,6 @@
 
 #include "../shaderProgram.hh"
 #include "axis.hh"
-#include "entity.hh"
 #include "line.hh"
 #include "points.hh"
 #include "renderer.hh"

@@ -1,14 +1,9 @@
-#pragma once
-#include <mutex>
+#include "grpc_conv.hh"
 
-#include "entity/factory.hh"
-#include "grpc_listener.hh"
-#include "layouts/pointAttribute.hpp"
-#include "renderer.hh"
+/* @brief  gRPC <-> Renderer conversion processor.
+ *
+ */
 
-// TODO mutex use?
-
-/* GRPC conversion utilities. */
 using namespace grpc_listener;
 
 static unsigned long g_grpc_entity_count = 0;
@@ -55,40 +50,34 @@ static std::shared_ptr<entity::Points> fromgRPC(const gl::PointCloud3 &pointclou
   return new_pts;
 }
 
-inline void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer,
-                             const std::shared_ptr<entity::EntityFactory> &factory) {
+void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer,
+                      const std::shared_ptr<entity::EntityFactory> &factory) {
   while (!shared_queue.point_queue.empty()) {
-    std::lock_guard<std::mutex> lock(shared_queue.mutex);
-
     auto &&pt = shared_queue.point_queue.front();
     auto gl_pt = fromgRPC(pt, factory);
     renderer.addEntity(gl_pt, "grpc_pt" + std::to_string(g_grpc_entity_count++));
 
-    shared_queue.point_queue.pop_front();
+    shared_queue.point_queue.pop();
   }
 
   while (!shared_queue.pointcloud_queue.empty()) {
-    std::lock_guard<std::mutex> lock(shared_queue.mutex);
-
     auto pointcloud = shared_queue.pointcloud_queue.front();
     auto &&gl_pointcloud = fromgRPC(pointcloud, factory);
     const std::string entity_name =
         pointcloud.has_entity_name() ? pointcloud.entity_name() : "grpc_pcloud" + std::to_string(g_grpc_entity_count++);
     renderer.addEntity(gl_pointcloud, entity_name);
 
-    shared_queue.pointcloud_queue.pop_front();
+    shared_queue.pointcloud_queue.pop();
   }
 
   while (!shared_queue.named_point_queue.empty()) {
-    std::lock_guard<std::mutex> lock(shared_queue.mutex);
-
     auto named_point = shared_queue.named_point_queue.front();
     auto &&gl_Point = fromgRPC(named_point, factory);
     const std::string entity_name =
         named_point.has_name() ? named_point.name() : "grpc_named_pt" + std::to_string(g_grpc_entity_count++);
     renderer.addEntity(gl_Point, entity_name);
 
-    shared_queue.named_point_queue.pop_front();
+    shared_queue.named_point_queue.pop();
   }
 
   if (shared_queue.reset_scene) {

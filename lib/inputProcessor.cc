@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/matrix.hpp>
+#include <stdexcept>
 
 std::unique_ptr<InputProcessor> InputProcessor::singleton_ = 0;
 
