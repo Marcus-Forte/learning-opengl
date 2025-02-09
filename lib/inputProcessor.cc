@@ -5,7 +5,7 @@
 #include <glm/matrix.hpp>
 #include <stdexcept>
 
-std::unique_ptr<InputProcessor> InputProcessor::singleton_ = 0;
+std::shared_ptr<InputProcessor> InputProcessor::singleton_ = nullptr;
 
 /* Static forwaders */
 void InputProcessor::keyboardCallbackFW(GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -40,6 +40,16 @@ void InputProcessor::keyboardCallback(GLFWwindow *window, int key, int scancode,
     pressed_keymap_.erase(key);
   }
   if (key == GLFW_KEY_R) camera_ref_->reset();
+
+  if (key == GLFW_KEY_M) {
+    reset_called_ = true;
+  }
+}
+
+bool InputProcessor::resetCalled() {
+  bool reset_latch = reset_called_;
+  reset_called_ = false;
+  return reset_latch;
 }
 
 void InputProcessor::mouseCallback(GLFWwindow *window, double xpos, double ypos) {

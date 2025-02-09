@@ -18,10 +18,11 @@ class InputProcessor {
   void mouseCallback(GLFWwindow *window, double xpos, double ypos);
   void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
   void inputProcessorThread();
+  bool resetCalled();
 
-  static std::unique_ptr<InputProcessor> &getInstance(Camera *camera) {
+  static std::shared_ptr<InputProcessor> &getInstance(Camera *camera) {
     if (!singleton_) {
-      singleton_ = std::unique_ptr<InputProcessor>(new InputProcessor(camera));
+      singleton_ = std::shared_ptr<InputProcessor>(new InputProcessor(camera));
     }
 
     return singleton_;
@@ -40,7 +41,7 @@ class InputProcessor {
 
   void moveCameraOnKey(int key, int mod = false) const;
 
-  static std::unique_ptr<InputProcessor> singleton_;
+  static std::shared_ptr<InputProcessor> singleton_;
   Camera *camera_ref_;
   bool mouse_pressed_ = false;
   bool shift_pressed_ = false;
@@ -50,4 +51,5 @@ class InputProcessor {
   bool running_;
 
   std::unordered_set<int> pressed_keymap_;
+  bool reset_called_;
 };

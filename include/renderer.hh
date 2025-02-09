@@ -10,6 +10,7 @@
 
 #include "camera.hh"
 #include "entity.hh"
+#include "inputProcessor.hh"
 
 class Renderer {
  public:
@@ -42,7 +43,7 @@ class Renderer {
   /// @param callback
   void registerCallback(const renderCallback &callback) { callbacks_.push_back(callback); }
 
-  void renderLoop() const;
+  void renderLoop();
 
   Camera &getCamera() { return camera_; }
 
@@ -51,4 +52,5 @@ class Renderer {
   Camera camera_;
   GLFWwindow *window_;
   std::vector<renderCallback> callbacks_;
+  std::shared_ptr<InputProcessor> input_processor_;
 };

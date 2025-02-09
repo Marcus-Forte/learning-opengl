@@ -80,10 +80,11 @@ void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer,
     shared_queue.named_point_queue.pop();
   }
 
+  /// \todo be smarter adding axes
   if (shared_queue.reset_scene) {
     renderer.clearEntities();
     auto axis = factory->create_axis(0, 0, 0, 0.5);
-    // renderer.addEntity(axis, "axis");
+    renderer.addEntity(axis, "axis");
     shared_queue.reset_scene = false;
     g_grpc_entity_count = 0;
   }

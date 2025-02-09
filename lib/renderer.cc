@@ -1,7 +1,5 @@
 #include "renderer.hh"
 
-#include "inputProcessor.hh"
-
 Renderer::Renderer() {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -15,7 +13,7 @@ Renderer::Renderer() {
     exit(-1);
   }
 
-  auto &input_processor = InputProcessor::getInstance(&camera_);
+  input_processor_ = InputProcessor::getInstance(&camera_);
 
   glfwMakeContextCurrent(window_);
   glfwSwapInterval(1);
@@ -36,13 +34,17 @@ Renderer::Renderer() {
 
 Renderer::~Renderer() { glfwTerminate(); }
 
-void Renderer::renderLoop() const {
+void Renderer::renderLoop() {
   glEnable(GL_PROGRAM_POINT_SIZE);
 
   while (!glfwWindowShouldClose(window_)) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
+
+    if (input_processor_->resetCalled()) {
+      clearEntities();
+    }
 
     for (const auto &callback : callbacks_) {
       callback();
