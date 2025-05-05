@@ -13,13 +13,13 @@ constexpr size_t g_num_elements = 1024;
  */
 using PointQueue = boost::lockfree::spsc_queue<gl::Point3, boost::lockfree::capacity<g_num_elements>>;
 using PointCloudQueue = boost::lockfree::spsc_queue<gl::PointCloud3, boost::lockfree::capacity<g_num_elements>>;
-using NamedPointQueue = boost::lockfree::spsc_queue<gl::NamedPoint3, boost::lockfree::capacity<g_num_elements>>;
+using LineQueue = boost::lockfree::spsc_queue<gl::LinesRequest, boost::lockfree::capacity<g_num_elements>>;
 
 namespace grpc_listener {
 struct SharedQueue {
   PointQueue point_queue;
   PointCloudQueue pointcloud_queue;
-  NamedPointQueue named_point_queue;
+  LineQueue line_queue;
   bool reset_scene;
 };
 
@@ -30,9 +30,9 @@ class addToSceneImpl : public gl::addToScene::Service {
                           ::google::protobuf::Empty *response) override;
   ::grpc::Status addPointCloud(::grpc::ServerContext *context, const gl::PointCloud3 *request,
                                ::google::protobuf::Empty *response) override;
+  ::grpc::Status addLines(::grpc::ServerContext *context, const ::gl::LinesRequest *request,
+                          ::google::protobuf::Empty *response) override;
   ::grpc::Status streamPointClouds(::grpc::ServerContext *context, ::grpc::ServerReader<gl::PointCloud3> *reader,
-                                   ::google::protobuf::Empty *response) override;
-  ::grpc::Status streamNamedPoints(::grpc::ServerContext *context, ::grpc::ServerReader<gl::NamedPoint3> *reader,
                                    ::google::protobuf::Empty *response) override;
 
   ::grpc::Status resetScene(::grpc::ServerContext *context, const ::google::protobuf::Empty *request,

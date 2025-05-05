@@ -28,15 +28,6 @@ static std::shared_ptr<entity::Points> fromgRPC(const gl::Point3 &pt,
   return new_pt;
 }
 
-static std::shared_ptr<entity::Points> fromgRPC(const gl::NamedPoint3 &pt,
-                                                const std::shared_ptr<entity::EntityFactory> &factory) {
-  std::vector<GLPointData> pts;
-  pts.push_back(fromgRPCPt(pt.point()));
-  auto new_pt = factory->create_points(pts);
-  new_pt->setPointSize(pt.size());
-  return new_pt;
-}
-
 static std::shared_ptr<entity::Points> fromgRPC(const gl::PointCloud3 &pointcloud,
                                                 const std::shared_ptr<entity::EntityFactory> &factory) {
   std::vector<GLPointData> pts;
@@ -70,15 +61,16 @@ void processgRPCQueue(SharedQueue &shared_queue, Renderer &renderer,
     shared_queue.pointcloud_queue.pop();
   }
 
-  while (!shared_queue.named_point_queue.empty()) {
-    auto named_point = shared_queue.named_point_queue.front();
-    auto &&gl_Point = fromgRPC(named_point, factory);
-    const std::string entity_name =
-        named_point.has_name() ? named_point.name() : "grpc_named_pt" + std::to_string(g_grpc_entity_count++);
-    renderer.addEntity(gl_Point, entity_name);
+  shared_queue.line_queue.consume_all([&](const gl::LinesRequest &lines) {
+    for (const auto &line : lines.lines()) {
+      const auto gl_line = factory->create_line(line.x0(), line.y0(), line.z0(), line.x1(), line.y1(), line.z1(),
+                                                lines.r(), lines.g(), lines.b());
+      const std::string entity_name =
+          line.has_entity_name() ? line.entity_name() : "grpc_line" + std::to_string(g_grpc_entity_count++);
 
-    shared_queue.named_point_queue.pop();
-  }
+      renderer.addEntity(gl_line, entity_name);
+    }
+  });
 
   /// \todo be smarter adding axes
   if (shared_queue.reset_scene) {

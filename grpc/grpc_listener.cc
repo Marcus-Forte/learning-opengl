@@ -16,6 +16,12 @@ namespace grpc_listener {
   return ::grpc::Status::OK;
 }
 
+::grpc::Status addToSceneImpl::addLines(::grpc::ServerContext *context, const ::gl::LinesRequest *request,
+                                        ::google::protobuf::Empty *response) {
+  queue_.line_queue.push(*request);
+  return ::grpc::Status::OK;
+}
+
 grpc::Status addToSceneImpl::streamPointClouds(::grpc::ServerContext *context,
                                                ::grpc::ServerReader<gl::PointCloud3> *reader,
                                                ::google::protobuf::Empty *response) {
@@ -23,18 +29,6 @@ grpc::Status addToSceneImpl::streamPointClouds(::grpc::ServerContext *context,
 
   while (reader->Read(&cloud)) {
     queue_.pointcloud_queue.push(cloud);
-  };
-
-  return ::grpc::Status::OK;
-}
-
-grpc::Status addToSceneImpl::streamNamedPoints(::grpc::ServerContext *context,
-                                               ::grpc::ServerReader<gl::NamedPoint3> *reader,
-                                               ::google::protobuf::Empty *response) {
-  gl::NamedPoint3 point;
-
-  while (reader->Read(&point)) {
-    queue_.named_point_queue.push(point);
   };
 
   return ::grpc::Status::OK;

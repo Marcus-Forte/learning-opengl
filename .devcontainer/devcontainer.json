@@ -10,13 +10,17 @@
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers/features/desktop-lite": {
-			"webPort": 6080
-		}
-	},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [50051, 6080],
+    "desktop-lite": {
+        "password": "vscode",
+        "webPort": "6080",
+        "vncPort": "5901"
+    }
+    },
+    "forwardPorts": [
+        5901,
+		50051,
+        6080
+    ],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
