@@ -39,7 +39,11 @@
 				"clangd.arguments": ["-header-insertion=never"]
 			}
 		}
-	}
+	},
+
+	"mounts": [
+		"source=learningopengl-app-cache,target=${containerWorkspaceFolder}/build,type=volume"
+	]
 	
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

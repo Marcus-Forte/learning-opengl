@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libgl_lib.a CMakeFiles/gl_lib.dir/lib/renderer.cc.o CMakeFiles/gl_lib.dir/lib/inputProcessor.cc.o CMakeFiles/gl_lib.dir/lib/shaderProgram.cc.o CMakeFiles/gl_lib.dir/lib/camera.cc.o CMakeFiles/gl_lib.dir/lib/entity/factory.cc.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libgl_lib.a
