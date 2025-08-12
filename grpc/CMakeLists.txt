@@ -17,7 +17,7 @@ if(gRPC_FOUND)
     grpc_listener.cc
     )
 
-    target_link_libraries(grpc_listener protolib)
+    target_link_libraries(grpc_listener PUBLIC protolib Boost::boost)
     target_include_directories(grpc_listener PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 endif()
