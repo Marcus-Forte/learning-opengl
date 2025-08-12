@@ -1,7 +1,4 @@
 {
-    "cmake.configureOnOpen": true,
-    "cmake.options.statusBarVisibility": "compact",
-    "cmake.debugConfig": {
-        "cwd": "${workspaceFolder}/build"
-    }
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.arguments": ["-header-insertion=never"]
 }
